@@ -526,9 +526,9 @@
 <script>
   // ── COUNTDOWN ──
   function update() {
-    const race = new Date('2026-12-10T07:00:00');
-    const now = new Date();
-    const days = Math.ceil((race - now) / 86400000);
+    const today = new Date(); today.setHours(0,0,0,0);
+    const race = new Date(2026, 11, 10);
+    const days = Math.round((race - today) / 86400000);
     document.getElementById('countdown').textContent = days > 0 ? days : '0';
     const wo = document.getElementById('weeks-out');
     if(wo) wo.textContent = days > 0 ? Math.floor(days/7) : '0';
