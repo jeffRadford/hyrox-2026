@@ -191,6 +191,33 @@
   /* TABLE WRAP */
   .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
 
+  /* MODAL */
+  .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; align-items:center; justify-content:center; padding:1rem; }
+  .modal-overlay.open { display:flex; }
+  .modal { background:var(--card); border:1px solid var(--border); border-radius:6px; max-width:600px; width:100%; max-height:90vh; overflow-y:auto; position:relative; }
+  .modal-header { padding:1.5rem 1.8rem 1rem; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; justify-content:space-between; gap:1rem; }
+  .modal-day { font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+  .modal-title { font-family:'Arial Black',Arial,sans-serif; font-size:1.5rem; letter-spacing:0.04em; color:var(--white); text-transform:uppercase; line-height:1.1; }
+  .modal-close { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; line-height:1; padding:0.2rem; flex-shrink:0; margin-top:-0.2rem; }
+  .modal-close:hover { color:var(--white); }
+  .modal-meta { display:flex; gap:1.5rem; padding:0.9rem 1.8rem; border-bottom:1px solid var(--border); flex-wrap:wrap; }
+  .modal-meta-item { display:flex; flex-direction:column; gap:0.15rem; }
+  .modal-meta-label { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .modal-meta-value { font-size:0.85rem; font-weight:700; color:var(--white); }
+  .modal-body { padding:1.4rem 1.8rem; }
+  .modal-section-title { font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--yellow); margin-bottom:0.7rem; margin-top:1.2rem; }
+  .modal-section-title:first-child { margin-top:0; }
+  .modal-exercise { display:flex; align-items:baseline; gap:0.8rem; padding:0.5rem 0; border-bottom:1px solid rgba(42,42,42,0.6); font-size:0.85rem; }
+  .modal-exercise:last-child { border-bottom:none; }
+  .modal-ex-bullet { color:var(--yellow); font-weight:700; flex-shrink:0; }
+  .modal-ex-name { color:var(--white); font-weight:600; flex:1; }
+  .modal-ex-detail { color:var(--muted); font-size:0.8rem; text-align:right; flex-shrink:0; }
+  .modal-note { margin-top:1rem; padding:0.9rem 1.2rem; background:rgba(245,197,24,0.04); border:1px dashed rgba(245,197,24,0.2); border-radius:4px; font-size:0.8rem; color:var(--muted); line-height:1.6; }
+  .modal-note strong { color:var(--yellow); }
+  .wk-clickable { cursor:pointer; transition:border-color 0.15s, transform 0.1s; }
+  .wk-clickable:hover { border-color:rgba(245,197,24,0.4); transform:translateY(-1px); }
+  .wk-tap-hint { font-size:0.6rem; color:rgba(136,136,136,0.5); margin-top:0.4rem; letter-spacing:0.05em; }
+
   /* FOOTER */
   footer { margin-top:3rem; padding:1.5rem; border-top:1px solid var(--border); text-align:center; font-size:0.72rem; color:rgba(136,136,136,0.45); letter-spacing:0.08em; }
   footer strong { color:var(--yellow); }
@@ -477,6 +504,21 @@
   </div>
 </section>
 
+<!-- WORKOUT MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-day" id="modal-day"></div>
+        <div class="modal-title" id="modal-title"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('modal-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-meta" id="modal-meta"></div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
 <footer>
   <strong>JEFF // HYROX NASHVILLE 2026</strong> &nbsp;·&nbsp; Men's Open &nbsp;·&nbsp; Updated each session &nbsp;·&nbsp; Strava connected · Garmin Forerunner 965
 </footer>
@@ -499,19 +541,175 @@
 
   // ── WEEK 1 PLAN (Sun May 24 – Sat May 30) ──
   // Index 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
-  // Coach updates this array each Monday with the new week's sessions
   const weekPlan = [
-    { type:'rest',     label:'Rest Day',             detail:'Full recovery — plan kicks off tomorrow',                     duration:'—'    },
-    { type:'strength', label:'Lower Body Strength',  detail:'Goblet squat, split squat, step-ups, RDL, farmer carry',     duration:'60 min' },
-    { type:'run',      label:'Zone 2 Easy Run',      detail:'45 min easy conversational pace · ~140–150 bpm',             duration:'60 min' },
-    { type:'strength', label:'Upper Body + Core',    detail:'Pull-ups, DB row, press, dead bug, Pallof press',            duration:'60 min' },
-    { type:'recovery', label:'Active Recovery',      detail:'Easy walk + hip flexor + thoracic mobility + foam roll',     duration:'30 min' },
-    { type:'interval', label:'Hyrox Intro',          detail:'Row 4×250m, box jumps, burpee broad jumps, farmer carry',   duration:'60 min' },
-    { type:'run',      label:'Long Easy Run',        detail:'55 min Zone 2 — time on feet, not pace',                    duration:'60 min' },
+    {
+      type:'rest', label:'Rest Day', detail:'Full recovery — plan kicks off tomorrow', duration:'—', location:'—',
+      workout: null
+    },
+    {
+      type:'strength', label:'Lower Body Strength', detail:'Goblet squat, split squat, step-ups, RDL, farmer carry', duration:'60 min', location:'Planet Fitness / Crunch',
+      workout: {
+        warmup: ['8 min bike', 'Leg swings × 10 each direction'],
+        sections: [
+          { title:'Main Work', exercises: [
+            { name:'Goblet Squat', detail:'4 × 12 — moderate weight, chest tall' },
+            { name:'Bulgarian Split Squat (DB)', detail:'3 × 10 each leg — control the descent' },
+            { name:'DB Romanian Deadlift', detail:'3 × 12 — hip hinge, soft knees, spine neutral' },
+            { name:'Step-Ups onto Box', detail:'3 × 12 each leg — drive through heel' },
+            { name:'Single-Leg Hip Thrust', detail:'3 × 15 each — full glute contraction at top' },
+          ]},
+          { title:'Finisher', exercises: [
+            { name:'Farmer Carry', detail:'3 × 30m — heaviest DBs you can control' },
+          ]},
+        ],
+        cooldown: ['5 min light walk', 'Hip flexor stretch 30s each side'],
+        coachNote: '<strong>Spine rule:</strong> No barbell loading today or ever. If the RDLs feel off, lighten the weight — form over load every time. Track your goblet squat and split squat weights — we add 5–10% next week.'
+      }
+    },
+    {
+      type:'run', label:'Zone 2 Easy Run', detail:'45 min easy conversational pace · ~140–150 bpm', duration:'60 min', location:'Outdoors',
+      workout: {
+        warmup: ['5 min walk warm-up'],
+        sections: [
+          { title:'Main Run', exercises: [
+            { name:'Easy Run', detail:'45 min — conversational pace the whole way' },
+            { name:'Heart Rate Target', detail:'140–150 bpm — if you can\'t hold a sentence, slow down' },
+            { name:'Pace', detail:'Don\'t chase a number — let HR guide you' },
+          ]},
+        ],
+        cooldown: ['10 min walk cool-down', 'Calf stretch, hamstring stretch, quad stretch — 30s each'],
+        coachNote: '<strong>This is genuinely easy.</strong> Most people run Zone 2 too hard. If it feels embarrassingly slow, that\'s correct. This session builds your aerobic engine — the foundation everything else sits on.'
+      }
+    },
+    {
+      type:'strength', label:'Upper Body + Core', detail:'Pull-ups, DB row, press, dead bug, Pallof press', duration:'60 min', location:'Planet Fitness / Crunch',
+      workout: {
+        warmup: ['8 min easy row', 'Arm circles × 10 forward/back', 'Band pull-apart × 15'],
+        sections: [
+          { title:'Main Work', exercises: [
+            { name:'Pull-Ups', detail:'4 × max reps — cap at 12, strict form, full dead hang' },
+            { name:'DB Bent-Over Row', detail:'3 × 12 each arm — elbow drives back, no rotation' },
+            { name:'Push-Ups', detail:'3 × 15–20 — elevate feet if easy; chest to floor' },
+            { name:'DB Shoulder Press', detail:'3 × 12 — seated or standing, neutral spine' },
+          ]},
+          { title:'Core Circuit — 3 Rounds', exercises: [
+            { name:'Dead Bug', detail:'× 10 reps — lower back stays flat, breathe' },
+            { name:'Pallof Press', detail:'× 12 each side — resist rotation, brace hard' },
+            { name:'Side Plank', detail:'× 30s each side — hips stacked, don\'t sag' },
+          ]},
+        ],
+        cooldown: ['5 min stretch — lats, chest, shoulders'],
+        coachNote: '<strong>Pull-ups:</strong> You\'re starting at 15 clean reps which is a strong base. Don\'t go to failure on the first set — save something for sets 2–4. Log your reps each set so we can track progress.'
+      }
+    },
+    {
+      type:'recovery', label:'Active Recovery', detail:'Easy walk + hip flexor + thoracic mobility + foam roll', duration:'30 min', location:'Home / Outdoors',
+      workout: {
+        warmup: [],
+        sections: [
+          { title:'Movement', exercises: [
+            { name:'Easy Walk or Light Bike', detail:'20–30 min — keep it genuinely easy, HR under 120' },
+          ]},
+          { title:'Mobility (10 min)', exercises: [
+            { name:'Hip Flexor Stretch', detail:'60s each side — lunge position, reach up' },
+            { name:'Thoracic Rotation', detail:'10 reps each side — thread the needle' },
+            { name:'90/90 Hip Stretch', detail:'60s each side' },
+          ]},
+          { title:'Foam Roll', exercises: [
+            { name:'Quads', detail:'60s each leg — slow passes' },
+            { name:'Hamstrings', detail:'60s each leg' },
+            { name:'Upper Back / Thoracic', detail:'60s — pause on tight spots' },
+          ]},
+        ],
+        cooldown: [],
+        coachNote: '<strong>Don\'t skip this.</strong> Recovery days are where adaptation happens. This is not optional filler — it\'s part of the training. If Body Battery is below 35, replace with full rest.'
+      }
+    },
+    {
+      type:'interval', label:'Hyrox Intro: Row + Conditioning', detail:'Row 4×250m, box jumps, burpee broad jumps, farmer carry', duration:'60 min', location:'Orangetheory or Crunch',
+      workout: {
+        warmup: ['5 min easy row — settle into the stroke, relax shoulders'],
+        sections: [
+          { title:'Rowing', exercises: [
+            { name:'4 × 250m Row', detail:'Strong effort — target sub-1:45/500m split · 60s rest between' },
+            { name:'Focus', detail:'Legs drive first, then lean back, then pull — in that order' },
+          ]},
+          { title:'Conditioning Circuit', exercises: [
+            { name:'Jump Rope', detail:'3 × 2 min — steady rhythm, light on your feet' },
+            { name:'Box Jumps', detail:'3 × 10 — explosive, land soft, reset each rep' },
+            { name:'Burpee Broad Jumps', detail:'3 × 10m — learning the movement pattern for race day' },
+            { name:'DB Farmer Carry', detail:'3 × 30m — heavy, upright posture, no leaning' },
+          ]},
+        ],
+        cooldown: ['5 min easy walk', 'Light stretch — hip flexors, shoulders'],
+        coachNote: '<strong>Row splits matter.</strong> Note your 250m split times — these are your baseline numbers. The race rowing station is 1000m and we\'ll build from here. Burpee broad jumps are new — focus on mechanics, not speed.'
+      }
+    },
+    {
+      type:'run', label:'Long Easy Run', detail:'55 min Zone 2 — time on feet, not pace', duration:'60 min', location:'Outdoors',
+      workout: {
+        warmup: ['5 min walk'],
+        sections: [
+          { title:'Main Run', exercises: [
+            { name:'Long Easy Run', detail:'55 min — Zone 2 throughout, same pace as Tuesday or slightly slower' },
+            { name:'Heart Rate', detail:'140–150 bpm ceiling — walk if you drift over' },
+            { name:'Mindset', detail:'Time on feet is the goal. Pace is irrelevant today.' },
+          ]},
+        ],
+        cooldown: ['5 min walk', 'Full leg stretch — 5 min'],
+        coachNote: '<strong>This is your longest run of Week 1.</strong> It should feel easy the whole way. If you\'re working hard at any point, slow down. These long easy runs are where your aerobic base is built — they pay dividends in December.'
+      }
+    },
   ];
 
   const typeLabels = { run:'Run', strength:'Strength', interval:'Hyrox', recovery:'Recovery', rest:'Rest', hyrox:'Hyrox Sim', pending:'TBD' };
   const dayNames   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const fullDayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+  // ── MODAL ──
+  function openModal(i, dateNum) {
+    const p = weekPlan[i];
+    if(!p || p.type === 'rest' || !p.workout) return;
+    document.getElementById('modal-day').textContent = fullDayNames[i] + ' · May ' + dateNum + ', 2026';
+    document.getElementById('modal-title').textContent = p.label;
+    document.getElementById('modal-meta').innerHTML = `
+      <div class="modal-meta-item"><div class="modal-meta-label">Duration</div><div class="modal-meta-value">${p.duration}</div></div>
+      <div class="modal-meta-item"><div class="modal-meta-label">Location</div><div class="modal-meta-value">${p.location}</div></div>
+      <div class="modal-meta-item"><div class="modal-meta-label">Phase</div><div class="modal-meta-value">1 — Base Building</div></div>
+      <div class="modal-meta-item"><div class="modal-meta-label">Week</div><div class="modal-meta-value">1 of 27</div></div>
+    `;
+    const w = p.workout;
+    let html = '';
+    if(w.warmup && w.warmup.length) {
+      html += '<div class="modal-section-title">Warm-Up</div>';
+      w.warmup.forEach(e => { html += `<div class="modal-exercise"><span class="modal-ex-bullet">—</span><span class="modal-ex-name">${e}</span></div>`; });
+    }
+    w.sections.forEach(s => {
+      html += `<div class="modal-section-title">${s.title}</div>`;
+      s.exercises.forEach(e => {
+        html += `<div class="modal-exercise"><span class="modal-ex-bullet">—</span><span class="modal-ex-name">${e.name}</span><span class="modal-ex-detail">${e.detail}</span></div>`;
+      });
+    });
+    if(w.cooldown && w.cooldown.length) {
+      html += '<div class="modal-section-title">Cool-Down</div>';
+      w.cooldown.forEach(e => { html += `<div class="modal-exercise"><span class="modal-ex-bullet">—</span><span class="modal-ex-name">${e}</span></div>`; });
+    }
+    if(w.coachNote) {
+      html += `<div class="modal-note">🎯 <strong>Coach:</strong> ${w.coachNote}</div>`;
+    }
+    document.getElementById('modal-body').innerHTML = html;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function closeModal(e) {
+    if(e.target === document.getElementById('modal-overlay')) {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if(e.key === 'Escape') document.getElementById('modal-overlay').classList.remove('open');
+  });
 
   function buildWeek() {
     const grid = document.getElementById('week-grid');
@@ -524,8 +722,10 @@
       const isToday = i === dow;
       const isPast  = i < dow;
       const p = weekPlan[i] || { type:'pending', label:'TBD', detail:'' };
+      const hasDetail = p.workout !== null && p.type !== 'rest';
       const card = document.createElement('div');
-      card.className = 'week-card' + (isToday?' is-today':'') + (isPast?' is-done':'') + (p.type==='rest'?' is-rest':'');
+      card.className = 'week-card' + (isToday?' is-today':'') + (isPast?' is-done':'') + (p.type==='rest'?' is-rest':'') + (hasDetail?' wk-clickable':'');
+      if(hasDetail) card.onclick = () => openModal(i, d.getDate());
       card.innerHTML = `
         ${isPast && p.type!=='rest' ? '<span class="wk-check">✓</span>' : ''}
         <div class="wk-day">${dayNames[i]}</div>
@@ -534,6 +734,7 @@
         <div class="wk-label">${p.label}</div>
         <div class="wk-detail">${p.detail}</div>
         ${p.duration && p.duration!=='—' ? `<div class="wk-duration">${p.duration}</div>` : ''}
+        ${hasDetail ? '<div class="wk-tap-hint">tap for full workout</div>' : ''}
       `;
       grid.appendChild(card);
     }
