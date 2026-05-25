@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>JEFF // HYROX NASHVILLE 2026</title>
+<style>
+  :root { color-scheme: light; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --black:#0a0a0a; --dark:#111111; --card:#1a1a1a; --border:#2a2a2a;
+    --yellow:#f5c518; --red:#cc2200; --white:#f0f0f0; --muted:#888888;
+    --green:#22c55e; --purple:#a78bfa;
+  }
+  html { scroll-behavior: smooth; }
+  body { background:var(--black); color:var(--white); font-family:system-ui,-apple-system,'Segoe UI',Arial,sans-serif; min-height:100vh; line-height:1.5; font-size:15px; }
+
+  /* NAV */
+  nav { position:sticky; top:0; z-index:100; background:rgba(10,10,10,0.97); border-bottom:1px solid var(--border); padding:0 1.5rem; display:flex; align-items:center; justify-content:space-between; height:56px; }
+  .nav-brand { font-family:'Arial Black',Arial,sans-serif; font-size:1rem; letter-spacing:0.1em; color:var(--white); }
+  .nav-brand span { color:var(--yellow); }
+  .nav-links { display:flex; gap:1.5rem; list-style:none; }
+  .nav-links a { color:var(--muted); text-decoration:none; font-size:0.72rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--yellow); }
+  .nav-badge { background:var(--yellow); color:var(--black); font-size:0.66rem; font-weight:800; letter-spacing:0.08em; padding:4px 10px; border-radius:2px; text-transform:uppercase; }
+  @media(max-width:700px){ .nav-links{display:none;} }
+
+  /* LAYOUT */
+  .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; }
+  section { padding:2rem 0; }
+
+  /* HERO */
+  .hero { padding:2.5rem 0 2rem; border-bottom:1px solid var(--border); }
+  .hero-top { display:flex; align-items:flex-start; justify-content:space-between; flex-wrap:wrap; gap:1.5rem; margin-bottom:1.8rem; }
+  .hero-label { font-size:0.68rem; font-weight:700; letter-spacing:0.18em; text-transform:uppercase; color:var(--yellow); margin-bottom:0.4rem; }
+  .hero-title { font-family:'Arial Black','Impact',Arial,sans-serif; font-size:clamp(2.4rem,6vw,4.5rem); letter-spacing:0.04em; line-height:0.95; color:var(--white); text-transform:uppercase; }
+  .hero-title span { color:var(--yellow); }
+  .countdown-block { text-align:right; }
+  .countdown-label { font-size:0.68rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.3rem; }
+  .countdown-number { font-family:'Arial Black','Impact',Arial,sans-serif; font-size:clamp(3rem,8vw,6rem); color:var(--yellow); line-height:1; }
+  .countdown-sub { font-size:0.68rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); }
+  @media(max-width:600px){ .hero-top{flex-direction:column;} .countdown-block{text-align:left;} }
+
+  /* TODAY CARD */
+  .workout-hero { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--yellow); border-radius:4px; padding:1.8rem 2rem; position:relative; overflow:hidden; }
+  .workout-hero.rest { border-left-color:var(--muted); }
+  .workout-hero::before { content:attr(data-bg); position:absolute; top:1rem; right:1.5rem; font-family:'Arial Black',Arial,sans-serif; font-size:5rem; color:rgba(245,197,24,0.05); letter-spacing:0.1em; pointer-events:none; }
+  .workout-hero-label { font-size:0.66rem; font-weight:700; letter-spacing:0.2em; text-transform:uppercase; color:var(--yellow); margin-bottom:0.5rem; }
+  .workout-hero.rest .workout-hero-label { color:var(--muted); }
+  .workout-hero-title { font-family:'Arial Black',Arial,sans-serif; font-size:1.8rem; letter-spacing:0.04em; margin-bottom:1rem; color:var(--white); text-transform:uppercase; }
+  .workout-body { font-size:0.88rem; color:rgba(240,240,240,0.75); line-height:1.7; }
+  .workout-meta { display:flex; gap:2rem; margin-top:1.2rem; flex-wrap:wrap; }
+  .workout-meta-label { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.2rem; }
+  .workout-meta-value { font-size:0.9rem; font-weight:700; color:var(--white); }
+  .set-list { list-style:none; margin-top:0.5rem; }
+  .set-list li { padding:0.3rem 0; border-bottom:1px solid rgba(42,42,42,0.5); font-size:0.85rem; color:rgba(240,240,240,0.75); display:flex; align-items:baseline; gap:0.6rem; }
+  .set-list li:last-child { border-bottom:none; }
+  .set-list li::before { content:'—'; color:var(--yellow); font-weight:700; flex-shrink:0; }
+
+  /* THIS WEEK */
+  .week-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:0.5rem; }
+  @media(max-width:900px){ .week-grid{grid-template-columns:repeat(4,1fr);} }
+  @media(max-width:500px){ .week-grid{grid-template-columns:repeat(2,1fr);} }
+  .week-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:0.9rem; display:flex; flex-direction:column; gap:0.4rem; position:relative; overflow:hidden; cursor:default; }
+  .week-card.is-today { border-color:var(--yellow); background:rgba(245,197,24,0.05); }
+  .week-card.is-today::after { content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--yellow); }
+  .week-card.is-done { opacity:0.45; }
+  .week-card.is-rest { opacity:0.55; }
+  .wk-day { font-size:0.6rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); }
+  .week-card.is-today .wk-day { color:var(--yellow); }
+  .wk-date { font-family:'Arial Black',Arial,sans-serif; font-size:1.4rem; line-height:1; color:var(--white); }
+  .week-card.is-today .wk-date { color:var(--yellow); }
+  .wk-type { display:inline-block; font-size:0.58rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:2px 6px; border-radius:2px; align-self:flex-start; margin-top:0.2rem; }
+  .wk-type.run      { background:rgba(245,197,24,0.15); color:var(--yellow); }
+  .wk-type.strength { background:rgba(204,34,0,0.15); color:#ff6b4a; }
+  .wk-type.recovery { background:rgba(34,197,94,0.15); color:var(--green); }
+  .wk-type.interval { background:rgba(139,92,246,0.15); color:var(--purple); }
+  .wk-type.rest     { background:rgba(136,136,136,0.1); color:var(--muted); }
+  .wk-label { font-size:0.78rem; font-weight:700; color:var(--white); line-height:1.3; }
+  .wk-detail { font-size:0.68rem; color:var(--muted); line-height:1.4; margin-top:auto; }
+  .wk-duration { font-size:0.7rem; font-weight:700; color:rgba(240,240,240,0.5); margin-top:0.3rem; }
+  .wk-check { position:absolute; top:0.5rem; right:0.6rem; font-size:0.75rem; color:var(--green); }
+  .week-note { margin-top:0.7rem; padding:0.8rem 1.2rem; background:rgba(245,197,24,0.04); border:1px dashed rgba(245,197,24,0.2); border-radius:4px; font-size:0.78rem; color:var(--muted); text-align:center; }
+
+  /* SECTION HEADER */
+  .section-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:1.1rem; padding-bottom:0.7rem; border-bottom:1px solid var(--border); }
+  .section-title { font-family:'Arial Black',Arial,sans-serif; font-size:1.3rem; letter-spacing:0.08em; color:var(--white); text-transform:uppercase; }
+  .section-badge { font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:3px 9px; border:1px solid var(--border); border-radius:2px; }
+
+  /* STATS */
+  .stats-row { display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:0.8rem; }
+  .stat-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.2rem 1.4rem; }
+  .stat-card.ay { border-top:2px solid var(--yellow); }
+  .stat-card.ar { border-top:2px solid var(--red); }
+  .stat-card.am { border-top:2px solid var(--muted); }
+  .stat-card.ag { border-top:2px solid var(--green); }
+  .stat-label { font-size:0.65rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--muted); margin-bottom:0.4rem; }
+  .stat-value { font-family:'Arial Black',Arial,sans-serif; font-size:2rem; letter-spacing:0.02em; line-height:1; color:var(--white); }
+  .stat-value.y { color:var(--yellow); } .stat-value.g { color:var(--green); }
+  .stat-sub { font-size:0.72rem; color:var(--muted); margin-top:0.3rem; }
+  .stat-delta { display:inline-flex; align-items:center; gap:0.2rem; font-size:0.7rem; font-weight:700; margin-top:0.3rem; }
+  .stat-delta.down { color:var(--red); } .stat-delta.up { color:var(--green); }
+
+  /* READINESS */
+  .readiness-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:0.8rem; }
+  .r-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.1rem 1.3rem; text-align:center; }
+  .r-label { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); margin-bottom:0.6rem; }
+  .r-score { font-family:'Arial Black',Arial,sans-serif; font-size:2.4rem; line-height:1; color:rgba(136,136,136,0.35); }
+  .r-sub { font-size:0.68rem; color:var(--muted); margin-top:0.3rem; }
+  .r-note { grid-column:1/-1; padding:0.9rem 1.2rem; background:rgba(245,197,24,0.04); border:1px dashed rgba(245,197,24,0.2); border-radius:4px; font-size:0.8rem; color:var(--muted); text-align:center; }
+  .r-note strong { color:var(--yellow); }
+
+  /* BENCHMARKS */
+  .bm-table { width:100%; border-collapse:collapse; }
+  .bm-table th { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0.5rem 0.9rem; text-align:left; border-bottom:1px solid var(--border); }
+  .bm-table td { padding:0.9rem 0.9rem; font-size:0.9rem; border-bottom:1px solid rgba(42,42,42,0.5); vertical-align:middle; }
+  .bm-table tr:last-child td { border-bottom:none; }
+  .bm-name { font-weight:700; color:var(--white); }
+  .bm-curr { font-family:'Arial Black',Arial,sans-serif; font-size:1.1rem; color:var(--yellow); }
+  .bm-peak { color:var(--muted); font-size:0.85rem; }
+  .bm-target { font-size:0.82rem; font-weight:700; color:var(--green); }
+  .gap-wrap { display:flex; align-items:center; gap:0.7rem; }
+  .gap-bar { height:4px; background:var(--border); border-radius:2px; flex:1; max-width:100px; position:relative; overflow:hidden; }
+  .gap-fill { position:absolute; left:0;top:0;bottom:0; background:var(--red); border-radius:2px; }
+  .gap-text { font-size:0.72rem; font-weight:700; color:var(--red); white-space:nowrap; }
+
+  /* PHASES */
+  .plan-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:0.8rem; }
+  .phase-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.3rem 1.5rem; }
+  .phase-lbl { font-size:0.63rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.3rem; }
+  .phase-lbl.y{color:var(--yellow);} .phase-lbl.r{color:var(--red);} .phase-lbl.g{color:var(--green);} .phase-lbl.m{color:var(--muted);}
+  .phase-name { font-family:'Arial Black',Arial,sans-serif; font-size:1.1rem; letter-spacing:0.04em; color:var(--white); margin-bottom:0.3rem; text-transform:uppercase; }
+  .phase-dates { font-size:0.74rem; color:var(--muted); margin-bottom:0.7rem; }
+  .phase-desc { font-size:0.8rem; color:rgba(240,240,240,0.6); line-height:1.6; }
+  .phase-badge { display:inline-block; margin-top:0.9rem; font-size:0.65rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:3px 9px; border-radius:2px; }
+  .phase-badge.active { background:var(--yellow); color:var(--black); }
+  .phase-badge.upcoming { color:var(--muted); border:1px solid var(--border); }
+
+  /* WORKOUT LOG */
+  .log-table { width:100%; border-collapse:collapse; }
+  .log-table th { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0.5rem 0.9rem; text-align:left; border-bottom:1px solid var(--border); }
+  .log-table td { padding:0.9rem 0.9rem; font-size:0.85rem; border-bottom:1px solid rgba(42,42,42,0.5); color:rgba(240,240,240,0.7); vertical-align:middle; }
+  .log-table tr:last-child td { border-bottom:none; }
+  .log-empty { text-align:center; padding:2.5rem 1rem; color:var(--muted); font-size:0.82rem; }
+  .tag { display:inline-block; font-size:0.62rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:2px 7px; border-radius:2px; }
+  .tag.run      { background:rgba(245,197,24,0.15); color:var(--yellow); }
+  .tag.strength { background:rgba(204,34,0,0.15); color:#ff6b4a; }
+  .tag.recovery { background:rgba(34,197,94,0.15); color:var(--green); }
+  .tag.interval { background:rgba(139,92,246,0.15); color:var(--purple); }
+
+  /* NUTRITION */
+  .nutrition-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.8rem; }
+  @media(max-width:600px){ .nutrition-grid{grid-template-columns:1fr;} }
+  .n-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1.3rem 1.5rem; }
+  .n-title { font-family:'Arial Black',Arial,sans-serif; font-size:1rem; letter-spacing:0.06em; color:var(--white); margin-bottom:0.7rem; text-transform:uppercase; }
+  .n-item { display:flex; align-items:flex-start; gap:0.6rem; padding:0.45rem 0; border-bottom:1px solid rgba(42,42,42,0.5); font-size:0.8rem; color:rgba(240,240,240,0.7); }
+  .n-item:last-child { border-bottom:none; }
+  .n-dot { width:6px; height:6px; border-radius:50%; margin-top:6px; flex-shrink:0; }
+  .n-dot.y{background:var(--yellow);} .n-dot.r{background:var(--red);} .n-dot.g{background:var(--green);} .n-dot.m{background:var(--muted);}
+  .n-note { margin-top:0.8rem; padding:0.8rem 1.2rem; background:rgba(245,197,24,0.04); border:1px dashed rgba(245,197,24,0.2); border-radius:4px; font-size:0.78rem; color:var(--muted); text-align:center; }
+
+  /* RACES */
+  .race-list { display:flex; flex-direction:column; gap:0.6rem; }
+  .race-item { display:flex; align-items:center; gap:1.2rem; background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1rem 1.4rem; }
+  .race-item.main { border-left:4px solid var(--yellow); background:rgba(245,197,24,0.04); }
+  .race-date { font-family:'Arial Black',Arial,sans-serif; font-size:1rem; letter-spacing:0.04em; color:var(--muted); min-width:100px; }
+  .race-item.main .race-date { color:var(--yellow); }
+  .race-info { flex:1; }
+  .race-name { font-weight:700; font-size:0.9rem; color:var(--white); }
+  .race-detail { font-size:0.75rem; color:var(--muted); margin-top:0.15rem; }
+  .race-dist { font-size:0.7rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:3px 9px; border-radius:2px; border:1px solid var(--border); color:var(--muted); }
+  .race-item.main .race-dist { background:var(--yellow); color:var(--black); border-color:var(--yellow); }
+
+  /* HYROX STATIONS */
+  .stations-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:0.6rem; }
+  .station-card { background:var(--card); border:1px solid var(--border); border-radius:4px; padding:1rem 1.2rem; display:flex; align-items:center; gap:1rem; }
+  .station-num { font-family:'Arial Black',Arial,sans-serif; font-size:1.8rem; color:rgba(245,197,24,0.25); line-height:1; min-width:36px; }
+  .station-info { flex:1; }
+  .station-name { font-weight:700; font-size:0.88rem; color:var(--white); }
+  .station-spec { font-size:0.75rem; color:var(--muted); margin-top:0.15rem; }
+  .station-target { font-size:0.72rem; font-weight:700; color:var(--green); margin-top:0.2rem; }
+
+  /* COACH'S NOTES */
+  .notes-card { background:var(--card); border:1px solid var(--border); border-left:4px solid var(--red); border-radius:4px; padding:1.3rem 1.8rem; }
+  .notes-lbl { font-size:0.64rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--red); margin-bottom:0.7rem; }
+  .note-entry { display:flex; gap:1rem; padding:0.7rem 0; border-bottom:1px solid rgba(42,42,42,0.5); }
+  .note-entry:last-child { border-bottom:none; }
+  .note-date { font-size:0.7rem; color:var(--muted); min-width:80px; padding-top:2px; flex-shrink:0; }
+  .note-text { font-size:0.82rem; color:rgba(240,240,240,0.7); line-height:1.6; }
+
+  /* TABLE WRAP */
+  .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+
+  /* FOOTER */
+  footer { margin-top:3rem; padding:1.5rem; border-top:1px solid var(--border); text-align:center; font-size:0.72rem; color:rgba(136,136,136,0.45); letter-spacing:0.08em; }
+  footer strong { color:var(--yellow); }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">JEFF <span>//</span> HYROX NASHVILLE 2026</div>
+  <ul class="nav-links">
+    <li><a href="#week">This Week</a></li>
+    <li><a href="#readiness">Readiness</a></li>
+    <li><a href="#benchmarks">Benchmarks</a></li>
+    <li><a href="#plan">Plan</a></li>
+    <li><a href="#log">Log</a></li>
+    <li><a href="#stations">Stations</a></li>
+    <li><a href="#nutrition">Nutrition</a></li>
+    <li><a href="#races">Races</a></li>
+  </ul>
+  <div class="nav-badge">DEC 10 · NASHVILLE</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="container">
+    <div class="hero-top">
+      <div>
+        <div class="hero-label">Hyrox Nashville 2026 · Race Day</div>
+        <div class="hero-title">TODAY'S<br><span>MISSION</span></div>
+      </div>
+      <div class="countdown-block">
+        <div class="countdown-label">Days to Race Day</div>
+        <div class="countdown-number" id="countdown">—</div>
+        <div class="countdown-sub">December 10, 2026 · Nashville, TN</div>
+      </div>
+    </div>
+    <!-- Today's Workout — updated dynamically by JS -->
+    <div class="workout-hero rest" data-bg="REST" id="today-card">
+      <div class="workout-hero-label" id="today-label">Today's Workout · <span id="today-date"></span></div>
+      <div class="workout-hero-title" id="today-title">Rest Day</div>
+      <div class="workout-body" id="today-body">
+        Full recovery. The plan officially begins tomorrow — Monday May 25.<br><br>
+        Use today to confirm your gear, check your Garmin is syncing to Strava, and review your Week 1 schedule below. You're set up better than most people who attempt this race. Let's get to work.
+      </div>
+      <div class="workout-meta">
+        <div><div class="workout-meta-label">Phase</div><div class="workout-meta-value">1 — Base Building</div></div>
+        <div><div class="workout-meta-label">Week</div><div class="workout-meta-value">1 of 27</div></div>
+        <div><div class="workout-meta-label">Next Session</div><div class="workout-meta-value">Monday — Lower Body Strength</div></div>
+        <div><div class="workout-meta-label">Location</div><div class="workout-meta-value">Planet Fitness / Crunch</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- THIS WEEK -->
+<section id="week">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">This Week</div>
+      <div class="section-badge">Week 1 of 27 · Base Building · May 24–30</div>
+    </div>
+    <div class="week-grid" id="week-grid"></div>
+    <div class="week-note">Updated each Monday. Your coach adjusts sessions mid-week based on your Garmin readiness check-in.</div>
+  </div>
+</section>
+
+<!-- READINESS -->
+<section id="readiness">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Daily Readiness</div>
+      <div class="section-badge">Garmin Forerunner 965 · Morning Check-In</div>
+    </div>
+    <div class="readiness-grid">
+      <div class="r-card"><div class="r-label">Body Battery</div><div class="r-score" id="r-bb">—</div><div class="r-sub">Target: 60+</div></div>
+      <div class="r-card"><div class="r-label">Sleep Score</div><div class="r-score" id="r-sleep">—</div><div class="r-sub">Target: 70+</div></div>
+      <div class="r-card"><div class="r-label">HRV Status</div><div class="r-score" id="r-hrv" style="font-size:1.3rem;padding-top:0.6rem">—</div><div class="r-sub">Target: Balanced</div></div>
+      <div class="r-card"><div class="r-label">Training Readiness</div><div class="r-score" id="r-tr">—</div><div class="r-sub">Target: 60+</div></div>
+      <div class="r-note"><strong>Check-in each session:</strong> Share your 4 Garmin readiness scores at the start of each chat. Takes 30 seconds — used to adapt every session in real time.</div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section>
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-card ay">
+        <div class="stat-label">Current Weight</div>
+        <div class="stat-value y">193</div>
+        <div class="stat-sub">lbs · goal: ~180 lbs</div>
+        <div class="stat-delta down">▼ 13 lbs to goal</div>
+      </div>
+      <div class="stat-card ar">
+        <div class="stat-label">5K Predicted</div>
+        <div class="stat-value">23:57</div>
+        <div class="stat-sub">peak: 21:50 · race target: sub-19:30</div>
+        <div class="stat-delta down">▼ 4:27 to race target</div>
+      </div>
+      <div class="stat-card ar">
+        <div class="stat-label">2K Row</div>
+        <div class="stat-value">sub-6:30</div>
+        <div class="stat-sub">strong baseline · target: sub-6:00</div>
+        <div class="stat-delta up">▲ solid start</div>
+      </div>
+      <div class="stat-card am">
+        <div class="stat-label">Weeks to Race</div>
+        <div class="stat-value" id="weeks-out">—</div>
+        <div class="stat-sub">December 10, 2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BENCHMARKS -->
+<section id="benchmarks">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Fitness Benchmarks</div>
+      <div class="section-badge">Garmin Predictions · May 2026</div>
+    </div>
+    <div class="table-wrap">
+      <table class="bm-table">
+        <thead><tr><th>Race</th><th>Current (May '26)</th><th>Peak (Nov '25)</th><th>Race Day Target</th><th>Gap to Peak</th></tr></thead>
+        <tbody>
+          <tr><td class="bm-name">5K</td><td class="bm-curr">23:57</td><td class="bm-peak">21:50</td><td class="bm-target">Sub-19:30 ⚡</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:90%"></div></div><span class="gap-text">▼ 4:27</span></div></td></tr>
+          <tr><td class="bm-name">10K</td><td class="bm-curr">52:42</td><td class="bm-peak">45:31</td><td class="bm-target">Sub-42:00</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:85%"></div></div><span class="gap-text">▼ 10:42</span></div></td></tr>
+          <tr><td class="bm-name">1km Hyrox Split</td><td class="bm-curr">~4:45/km est</td><td class="bm-peak">—</td><td class="bm-target">Sub-3:55/km</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:85%"></div></div><span class="gap-text">▼ ~50s/km</span></div></td></tr>
+          <tr><td class="bm-name">Pull-ups</td><td class="bm-curr">15 reps</td><td class="bm-peak">—</td><td class="bm-target">20+ reps</td><td><div class="gap-wrap"><span style="font-size:0.8rem;color:var(--green)">▲ Strong baseline</span></div></td></tr>
+          <tr><td class="bm-name">2K Row</td><td class="bm-curr">Sub-6:30</td><td class="bm-peak">—</td><td class="bm-target">Sub-6:00</td><td><div class="gap-wrap"><span style="font-size:0.8rem;color:var(--green)">▲ Strong baseline</span></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING PLAN PHASES -->
+<section id="plan">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Training Plan</div>
+      <div class="section-badge">27-Week Periodized · Men's Open</div>
+    </div>
+    <div class="plan-grid">
+      <div class="phase-card">
+        <div class="phase-lbl y">Phase 1 · Weeks 1–6</div>
+        <div class="phase-name">Base Building</div>
+        <div class="phase-dates">May 25 – July 5, 2026</div>
+        <div class="phase-desc">Rebuild aerobic base, establish all movement patterns, introduce Hyrox stations. Mon/Wed strength, Tue/Sat runs, Fri Hyrox conditioning, Thu recovery, Sun rest. Target: ~188 lbs by end of phase.</div>
+        <span class="phase-badge active">▶ Active Now</span>
+      </div>
+      <div class="phase-card">
+        <div class="phase-lbl m">Phase 2 · Weeks 7–14</div>
+        <div class="phase-name">New Parent Window</div>
+        <div class="phase-dates">July 6 – August 30, 2026</div>
+        <div class="phase-desc">Baby arrives ~July 8. 4 sessions/week, 30–45 min, no intensity targets. Strength + easy runs + light Hyrox movement. Every session completed is a win. No guilt.</div>
+        <span class="phase-badge upcoming">Upcoming</span>
+      </div>
+      <div class="phase-card">
+        <div class="phase-lbl r">Phase 3 · Weeks 15–21</div>
+        <div class="phase-name">Race Specific Build</div>
+        <div class="phase-dates">August 31 – October 18, 2026</div>
+        <div class="phase-desc">All 8 Hyrox stations at race weights. Running under fatigue. Sled push/pull, ski erg, sandbag lunges, wall balls. Peak volume and intensity. 5K/10K tune-up races.</div>
+        <span class="phase-badge upcoming">Upcoming</span>
+      </div>
+      <div class="phase-card">
+        <div class="phase-lbl g">Phase 4 · Weeks 22–27</div>
+        <div class="phase-name">Peak &amp; Taper</div>
+        <div class="phase-dates">October 19 – December 10, 2026</div>
+        <div class="phase-desc">Full Hyrox race simulations weeks 22–24. Progressive taper from week 25. Arrive at the start line sharp, fresh, and ready to execute.</div>
+        <span class="phase-badge upcoming">Upcoming</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WORKOUT LOG -->
+<section id="log">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Workout Log</div>
+      <div class="section-badge">Auto-populated via Strava · Updated each session</div>
+    </div>
+    <div class="table-wrap">
+      <table class="log-table">
+        <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Duration</th><th>Avg HR</th><th>Notes</th></tr></thead>
+        <tbody id="log-body">
+          <tr><td colspan="6"><div class="log-empty">Plan begins Monday May 25. First session logs here after completion.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- HYROX STATIONS -->
+<section id="stations">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Race Stations</div>
+      <div class="section-badge">Men's Open · 8 rounds of 1km run + station</div>
+    </div>
+    <div class="stations-grid">
+      <div class="station-card"><div class="station-num">1</div><div class="station-info"><div class="station-name">Ski Erg</div><div class="station-spec">1,000m</div><div class="station-target">Target: Sub-4:15</div></div></div>
+      <div class="station-card"><div class="station-num">2</div><div class="station-info"><div class="station-name">Sled Push</div><div class="station-spec">50m · 152kg total</div><div class="station-target">Reintroducing in Phase 1</div></div></div>
+      <div class="station-card"><div class="station-num">3</div><div class="station-info"><div class="station-name">Sled Pull</div><div class="station-spec">50m · 103kg total</div><div class="station-target">Reintroducing in Phase 1</div></div></div>
+      <div class="station-card"><div class="station-num">4</div><div class="station-info"><div class="station-name">Burpee Broad Jumps</div><div class="station-spec">80m</div><div class="station-target">Building in Phase 1</div></div></div>
+      <div class="station-card"><div class="station-num">5</div><div class="station-info"><div class="station-name">Rowing</div><div class="station-spec">1,000m</div><div class="station-target">Target: Sub-3:30 (1K split)</div></div></div>
+      <div class="station-card"><div class="station-num">6</div><div class="station-info"><div class="station-name">Farmer's Carry</div><div class="station-spec">200m · 2×24kg</div><div class="station-target">Building from Phase 1</div></div></div>
+      <div class="station-card"><div class="station-num">7</div><div class="station-info"><div class="station-name">Sandbag Lunges</div><div class="station-spec">100m · 30kg</div><div class="station-target">Building from Phase 1</div></div></div>
+      <div class="station-card"><div class="station-num">8</div><div class="station-info"><div class="station-name">Wall Balls</div><div class="station-spec">75 reps · 9kg to 4.5m</div><div class="station-target">Target: Unbroken or 2 sets</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- NUTRITION -->
+<section id="nutrition">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Nutrition</div>
+      <div class="section-badge">$100/week · No restrictions</div>
+    </div>
+    <div class="nutrition-grid">
+      <div class="n-card">
+        <div class="n-title">Daily Targets</div>
+        <div class="n-item"><div class="n-dot y"></div><span>Protein: ~180–200g/day — match goal body weight in grams</span></div>
+        <div class="n-item"><div class="n-dot g"></div><span>Carbs: periodized — higher on hard training days, lower on rest</span></div>
+        <div class="n-item"><div class="n-dot m"></div><span>Fats: healthy sources — eggs, nuts, olive oil, avocado</span></div>
+        <div class="n-item"><div class="n-dot m"></div><span>Vegetables: minimum 2 servings per day, building up</span></div>
+        <div class="n-item"><div class="n-dot m"></div><span>Hydration: 80–100 oz water daily, more on training days</span></div>
+      </div>
+      <div class="n-card">
+        <div class="n-title">Habits to Upgrade</div>
+        <div class="n-item"><div class="n-dot r"></div><span>Replace peanut butter crackers with Greek yogurt, cottage cheese, or hard-boiled eggs</span></div>
+        <div class="n-item"><div class="n-dot r"></div><span>Under-fueling early — front-load breakfast with more protein</span></div>
+        <div class="n-item"><div class="n-dot y"></div><span>Eggs are great — add variety (chicken, tuna, turkey) to spread protein through the day</span></div>
+        <div class="n-item"><div class="n-dot g"></div><span>Dinner with meat + veggies is solid — keep and expand this pattern</span></div>
+      </div>
+    </div>
+    <div class="n-note">Full weekly meal plan with grocery list coming soon — budget-optimized to $100/week.</div>
+  </div>
+</section>
+
+<!-- RACE CALENDAR -->
+<section id="races">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Race Calendar</div>
+      <div class="section-badge">Updated as races are added</div>
+    </div>
+    <div class="race-list">
+      <div class="race-item">
+        <div class="race-date">TBD</div>
+        <div class="race-info"><div class="race-name">5K — Race TBD</div><div class="race-detail">Add your first 5K — Phase 3 target race</div></div>
+        <div class="race-dist">5K</div>
+      </div>
+      <div class="race-item">
+        <div class="race-date">TBD</div>
+        <div class="race-info"><div class="race-name">10K — Race TBD</div><div class="race-detail">Optional tune-up race — Phase 3</div></div>
+        <div class="race-dist">10K</div>
+      </div>
+      <div class="race-item main">
+        <div class="race-date">DEC 10, 2026</div>
+        <div class="race-info"><div class="race-name">Hyrox Nashville</div><div class="race-detail">Nashville, Tennessee · Men's Open · Goal: Sub-1:15:00</div></div>
+        <div class="race-dist">Hyrox</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACH'S NOTES -->
+<section>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-title">Coach's Notes</div>
+      <div class="section-badge">Updated each session</div>
+    </div>
+    <div class="notes-card">
+      <div class="notes-lbl">Latest from your coach</div>
+      <div class="note-entry">
+        <div class="note-date">May 24, 2026</div>
+        <div class="note-text">Target updated to sub-1:15:00 — the real goal from day one. That requires getting your 5K to sub-19:30, which is 4+ minutes faster than where you are today and past your all-time best. It's achievable — your row baseline and strength tell me your engine is there, the running just needs to be built aggressively. Weight loss to 180 lbs is now a performance variable, not just a body comp goal. Running is the critical path. Every session matters.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <strong>JEFF // HYROX NASHVILLE 2026</strong> &nbsp;·&nbsp; Men's Open &nbsp;·&nbsp; Updated each session &nbsp;·&nbsp; Strava connected · Garmin Forerunner 965
+</footer>
+
+<script>
+  // ── COUNTDOWN ──
+  function update() {
+    const race = new Date('2026-12-10T07:00:00');
+    const now = new Date();
+    const days = Math.ceil((race - now) / 86400000);
+    document.getElementById('countdown').textContent = days > 0 ? days : '0';
+    const wo = document.getElementById('weeks-out');
+    if(wo) wo.textContent = days > 0 ? Math.floor(days/7) : '0';
+  }
+
+  function setDate() {
+    const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', opts);
+  }
+
+  // ── WEEK 1 PLAN (Sun May 24 – Sat May 30) ──
+  // Index 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  // Coach updates this array each Monday with the new week's sessions
+  const weekPlan = [
+    { type:'rest',     label:'Rest Day',             detail:'Full recovery — plan kicks off tomorrow',                     duration:'—'    },
+    { type:'strength', label:'Lower Body Strength',  detail:'Goblet squat, split squat, step-ups, RDL, farmer carry',     duration:'60 min' },
+    { type:'run',      label:'Zone 2 Easy Run',      detail:'45 min easy conversational pace · ~140–150 bpm',             duration:'60 min' },
+    { type:'strength', label:'Upper Body + Core',    detail:'Pull-ups, DB row, press, dead bug, Pallof press',            duration:'60 min' },
+    { type:'recovery', label:'Active Recovery',      detail:'Easy walk + hip flexor + thoracic mobility + foam roll',     duration:'30 min' },
+    { type:'interval', label:'Hyrox Intro',          detail:'Row 4×250m, box jumps, burpee broad jumps, farmer carry',   duration:'60 min' },
+    { type:'run',      label:'Long Easy Run',        detail:'55 min Zone 2 — time on feet, not pace',                    duration:'60 min' },
+  ];
+
+  const typeLabels = { run:'Run', strength:'Strength', interval:'Hyrox', recovery:'Recovery', rest:'Rest', hyrox:'Hyrox Sim', pending:'TBD' };
+  const dayNames   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
+
+  function buildWeek() {
+    const grid = document.getElementById('week-grid');
+    const today = new Date();
+    const dow = today.getDay();
+    grid.innerHTML = '';
+    for(let i=0; i<7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() + (i - dow));
+      const isToday = i === dow;
+      const isPast  = i < dow;
+      const p = weekPlan[i] || { type:'pending', label:'TBD', detail:'' };
+      const card = document.createElement('div');
+      card.className = 'week-card' + (isToday?' is-today':'') + (isPast?' is-done':'') + (p.type==='rest'?' is-rest':'');
+      card.innerHTML = `
+        ${isPast && p.type!=='rest' ? '<span class="wk-check">✓</span>' : ''}
+        <div class="wk-day">${dayNames[i]}</div>
+        <div class="wk-date">${d.getDate()}</div>
+        <span class="wk-type ${p.type}">${typeLabels[p.type]||p.type}</span>
+        <div class="wk-label">${p.label}</div>
+        <div class="wk-detail">${p.detail}</div>
+        ${p.duration && p.duration!=='—' ? `<div class="wk-duration">${p.duration}</div>` : ''}
+      `;
+      grid.appendChild(card);
+    }
+  }
+
+  update();
+  setDate();
+  buildWeek();
+  setInterval(update, 60000);
+</script>
+</body>
+</html>
