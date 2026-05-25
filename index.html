@@ -781,6 +781,19 @@
     `;
   }
 
+  // ── GARMIN_LIVE_DATA (auto-updated by pull_garmin_data.py — do not edit this block manually) ──
+  (function(){
+    var g = {"bb": 0, "sleep": null, "hrv": null, "tr": 79, "date": "2026-05-25"};
+    function setNum(id,v,good,warn){if(v===null||v===undefined)return;var el=document.getElementById(id);el.textContent=v;el.style.color=v>=good?'var(--green)':v<warn?'var(--red)':'var(--yellow)';el.style.fontSize='2rem';}
+    function setStr(id,v,goodVal,badVals){if(!v)return;var el=document.getElementById(id);el.textContent=v;el.style.color=v===goodVal?'var(--green)':badVals.indexOf(v)>-1?'var(--red)':'var(--muted)';el.style.fontSize='1.2rem';}
+    setNum('r-bb', g.bb, 60, 40);
+    setNum('r-sleep', g.sleep, 70, 60);
+    setStr('r-hrv', g.hrv, 'Balanced', ['Low','Unbalanced']);
+    setNum('r-tr', g.tr, 60, 50);
+    if(g.date){var note=document.querySelector('.r-note');if(note)note.innerHTML='<strong>Last sync: '+g.date+'</strong> · Garmin auto-syncs at 7:30 AM daily';}
+  })();
+  // ── END_GARMIN_LIVE_DATA ──
+
   update();
   setDate();
   buildWeek();
