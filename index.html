@@ -740,9 +740,51 @@
     }
   }
 
+  function setTodayWorkout() {
+    const dow = new Date().getDay();
+    const p = weekPlan[dow] || { type:'rest', label:'Rest Day', detail:'', duration:'—', location:'—', workout:null };
+    const card = document.getElementById('today-card');
+    const bgMap = { rest:'REST', strength:'LIFT', run:'RUN', interval:'HYROX', recovery:'REST', hyrox:'RACE SIM', pending:'TBD' };
+
+    // Update card style
+    card.className = 'workout-hero' + (p.type === 'rest' || p.type === 'recovery' ? ' rest' : '');
+    card.setAttribute('data-bg', bgMap[p.type] || p.type.toUpperCase());
+
+    // Update title
+    document.getElementById('today-title').textContent = p.label;
+
+    // Build body from workout data or fall back to detail
+    const bodyEl = document.getElementById('today-body');
+    if(p.workout) {
+      let bodyHtml = '';
+      p.workout.sections.forEach(s => {
+        bodyHtml += `<strong style="color:var(--yellow);font-size:0.7rem;letter-spacing:0.12em;text-transform:uppercase;">${s.title}</strong><ul class="set-list" style="margin-bottom:0.7rem;">`;
+        s.exercises.forEach(e => { bodyHtml += `<li><span style="flex:1">${e.name}</span><span style="color:var(--muted);font-size:0.78rem;">${e.detail}</span></li>`; });
+        bodyHtml += '</ul>';
+      });
+      if(p.workout.coachNote) bodyHtml += `<div style="margin-top:0.5rem;font-size:0.8rem;color:var(--muted);">${p.workout.coachNote}</div>`;
+      bodyEl.innerHTML = bodyHtml;
+    } else {
+      bodyEl.textContent = p.detail || 'Full rest day. Recovery is part of the training.';
+    }
+
+    // Update meta
+    const nextDow = (dow + 1) % 7;
+    const nextPlan = weekPlan[nextDow];
+    const metaEl = card.querySelector('.workout-meta');
+    metaEl.innerHTML = `
+      <div><div class="workout-meta-label">Phase</div><div class="workout-meta-value">1 — Base Building</div></div>
+      <div><div class="workout-meta-label">Week</div><div class="workout-meta-value">1 of 27</div></div>
+      <div><div class="workout-meta-label">Duration</div><div class="workout-meta-value">${p.duration}</div></div>
+      <div><div class="workout-meta-label">Location</div><div class="workout-meta-value">${p.location || '—'}</div></div>
+      ${nextPlan ? `<div><div class="workout-meta-label">Next Session</div><div class="workout-meta-value">${fullDayNames[nextDow]} — ${nextPlan.label}</div></div>` : ''}
+    `;
+  }
+
   update();
   setDate();
   buildWeek();
+  setTodayWorkout();
   setInterval(update, 60000);
 </script>
 </body>
