@@ -221,7 +221,53 @@
   /* FOOTER */
   footer { margin-top:3rem; padding:1.5rem; border-top:1px solid var(--border); text-align:center; font-size:0.72rem; color:rgba(136,136,136,0.45); letter-spacing:0.08em; }
   footer strong { color:var(--yellow); }
+
+  /* CLICKABLE STAT CARDS */
+  .stat-card.clickable { cursor:pointer; transition:border-color 0.15s, transform 0.1s; }
+  .stat-card.clickable:hover { border-color:rgba(245,197,24,0.4); transform:translateY(-1px); }
+  .stat-tap { font-size:0.58rem; color:rgba(136,136,136,0.38); margin-top:0.25rem; letter-spacing:0.05em; }
+
+  /* CLICKABLE READINESS TILES */
+  .r-card.clickable { cursor:pointer; transition:border-color 0.15s, transform 0.1s; }
+  .r-card.clickable:hover { border-color:rgba(245,197,24,0.4); transform:translateY(-1px); }
+
+  /* TREND MODAL */
+  .trend-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:600; align-items:center; justify-content:center; padding:1rem; }
+  .trend-overlay.open { display:flex; }
+  .trend-box { background:var(--card); border:1px solid var(--border); border-radius:6px; max-width:520px; width:100%; }
+  .trend-head { padding:1.2rem 1.8rem 0.8rem; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .trend-title { font-family:'Arial Black',Arial,sans-serif; font-size:1.1rem; letter-spacing:0.04em; color:var(--white); text-transform:uppercase; }
+  .trend-close { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; line-height:1; }
+  .trend-close:hover { color:var(--white); }
+  .trend-body { padding:1.4rem 1.8rem 1.8rem; }
+  .trend-empty { text-align:center; padding:2rem; color:var(--muted); font-size:0.82rem; }
+
+  /* WORKOUT DETAIL MODAL */
+  .wd-stat-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:0.7rem; padding:1.1rem 1.8rem; border-bottom:1px solid var(--border); }
+  @media(max-width:480px){ .wd-stat-grid{grid-template-columns:repeat(2,1fr);} }
+  .wd-stat { display:flex; flex-direction:column; gap:0.15rem; }
+  .wd-stat-label { font-size:0.6rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .wd-stat-value { font-size:0.95rem; font-weight:700; color:var(--white); }
+  .wd-section { padding:1rem 1.8rem; border-bottom:1px solid var(--border); }
+  .wd-section:last-child { border-bottom:none; padding-bottom:1.4rem; }
+  .wd-section-title { font-size:0.62rem; font-weight:700; letter-spacing:0.15em; text-transform:uppercase; color:var(--yellow); margin-bottom:0.75rem; }
+  .zone-row { display:flex; align-items:center; gap:0.8rem; margin-bottom:0.45rem; }
+  .zone-lbl { font-size:0.68rem; font-weight:700; color:var(--muted); min-width:48px; }
+  .zone-bg { flex:1; height:5px; background:var(--border); border-radius:3px; overflow:hidden; }
+  .zone-fill { height:100%; border-radius:3px; }
+  .z1{background:#22c55e;} .z2{background:#84cc16;} .z3{background:#f5c518;} .z4{background:#f97316;} .z5{background:#cc2200;}
+  .zone-min { font-size:0.7rem; color:var(--muted); min-width:36px; text-align:right; }
+  .splits-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+  .splits-table th { font-size:0.6rem; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:0.3rem 0.5rem; text-align:left; border-bottom:1px solid var(--border); }
+  .splits-table td { padding:0.45rem 0.5rem; border-bottom:1px solid rgba(42,42,42,0.4); color:rgba(240,240,240,0.75); }
+  .splits-table tr:last-child td { border-bottom:none; }
+
+  /* LOG ROW HOVER */
+  .log-table tbody tr { cursor:pointer; transition:background 0.12s; }
+  .log-table tbody tr:hover td { background:rgba(245,197,24,0.03); }
+  .log-table tbody tr:hover td:first-child { border-left:2px solid rgba(245,197,24,0.5); padding-left:calc(0.9rem - 2px); }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 </head>
 <body>
 
@@ -296,7 +342,18 @@
       <div class="r-card"><div class="r-label">Sleep Score</div><div class="r-score" id="r-sleep">—</div><div class="r-sub">Target: 70+</div></div>
       <div class="r-card"><div class="r-label">HRV Status</div><div class="r-score" id="r-hrv" style="font-size:1.3rem;padding-top:0.6rem">—</div><div class="r-sub">Target: Balanced</div></div>
       <div class="r-card"><div class="r-label">Training Readiness</div><div class="r-score" id="r-tr">—</div><div class="r-sub">Target: 60+</div></div>
-      <div class="r-note"><strong>Check-in each session:</strong> Share your 4 Garmin readiness scores at the start of each chat. Takes 30 seconds — used to adapt every session in real time.</div>
+      <div class="r-card"><div class="r-label">VO2 Max</div><div class="r-score" id="r-vo2">—</div><div class="r-sub" id="r-vo2-sub">Garmin · Excellent</div></div>
+      <div class="r-card clickable" onclick="openTrendChart('weight')" title="View weight trend">
+        <div class="r-label">Weight ↗</div>
+        <div class="r-score" id="r-weight" style="font-size:1.8rem">193</div>
+        <div class="r-sub">lbs · goal: 180 · tap for trend</div>
+      </div>
+      <div class="r-card clickable" onclick="openTrendChart('pred5k')" title="View 5K prediction trend">
+        <div class="r-label">5K Predicted ↗</div>
+        <div class="r-score" id="r-5k" style="font-size:1.5rem;padding-top:0.4rem">—</div>
+        <div class="r-sub">Target: sub-21:00 · tap for trend</div>
+      </div>
+      <div class="r-note"><strong>Last sync: —</strong> · <span id="r-sync-note">Garmin auto-syncs at 7:30 AM daily · Weight updated Sunday evenings</span></div>
     </div>
   </div>
 </section>
@@ -305,23 +362,26 @@
 <section>
   <div class="container">
     <div class="stats-row">
-      <div class="stat-card ay">
+      <div class="stat-card ay clickable" onclick="openTrendChart('weight')" title="View weight trend">
         <div class="stat-label">Current Weight</div>
-        <div class="stat-value y">193</div>
+        <div class="stat-value y" id="stat-weight">193</div>
         <div class="stat-sub">lbs · goal: ~180 lbs</div>
         <div class="stat-delta down">▼ 13 lbs to goal</div>
+        <div class="stat-tap">tap to view trend chart</div>
       </div>
-      <div class="stat-card ar">
+      <div class="stat-card ar clickable" onclick="openTrendChart('pred5k')" title="View 5K trend">
         <div class="stat-label">5K Predicted</div>
-        <div class="stat-value">23:57</div>
+        <div class="stat-value" id="stat-5k">—</div>
         <div class="stat-sub">peak: 21:50 · race target: sub-21:00</div>
-        <div class="stat-delta down">▼ 2:57 to race target</div>
+        <div class="stat-delta down" id="stat-5k-note">Auto-updated from Garmin daily</div>
+        <div class="stat-tap">tap to view trend chart</div>
       </div>
-      <div class="stat-card ar">
-        <div class="stat-label">2K Row</div>
-        <div class="stat-value">sub-6:30</div>
-        <div class="stat-sub">strong baseline · target: sub-6:00</div>
-        <div class="stat-delta up">▲ solid start</div>
+      <div class="stat-card ar clickable" onclick="openTrendChart('pred10k')" title="View 10K trend">
+        <div class="stat-label">10K Predicted</div>
+        <div class="stat-value" id="stat-10k">—</div>
+        <div class="stat-sub">peak: 45:31 · target: sub-42:00</div>
+        <div class="stat-delta down" id="stat-10k-note">Auto-updated from Garmin daily</div>
+        <div class="stat-tap">tap to view trend chart</div>
       </div>
       <div class="stat-card am">
         <div class="stat-label">Weeks to Race</div>
@@ -343,11 +403,11 @@
       <table class="bm-table">
         <thead><tr><th>Race</th><th>Current (May '26)</th><th>Peak (Nov '25)</th><th>Race Day Target</th><th>Gap to Peak</th></tr></thead>
         <tbody>
-          <tr><td class="bm-name">5K</td><td class="bm-curr">23:57</td><td class="bm-peak">21:50</td><td class="bm-target">Sub-21:00 ⚡</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:75%"></div></div><span class="gap-text">▼ 2:57</span></div></td></tr>
-          <tr><td class="bm-name">10K</td><td class="bm-curr">52:42</td><td class="bm-peak">45:31</td><td class="bm-target">Sub-42:00</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:85%"></div></div><span class="gap-text">▼ 10:42</span></div></td></tr>
+          <tr><td class="bm-name">5K</td><td class="bm-curr" id="bm-5k">—</td><td class="bm-peak">21:50</td><td class="bm-target">Sub-21:00 ⚡</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" id="bm-5k-bar" style="width:75%"></div></div><span class="gap-text" id="bm-5k-gap">▼ —</span></div></td></tr>
+          <tr><td class="bm-name">10K</td><td class="bm-curr" id="bm-10k">—</td><td class="bm-peak">45:31</td><td class="bm-target">Sub-42:00</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" id="bm-10k-bar" style="width:85%"></div></div><span class="gap-text" id="bm-10k-gap">▼ —</span></div></td></tr>
           <tr><td class="bm-name">1km Hyrox Split</td><td class="bm-curr">~4:45/km est</td><td class="bm-peak">—</td><td class="bm-target">Sub-3:55/km</td><td><div class="gap-wrap"><div class="gap-bar"><div class="gap-fill" style="width:85%"></div></div><span class="gap-text">▼ ~50s/km</span></div></td></tr>
           <tr><td class="bm-name">Pull-ups</td><td class="bm-curr">15 reps</td><td class="bm-peak">—</td><td class="bm-target">20+ reps</td><td><div class="gap-wrap"><span style="font-size:0.8rem;color:var(--green)">▲ Strong baseline</span></div></td></tr>
-          <tr><td class="bm-name">2K Row</td><td class="bm-curr">Sub-6:30</td><td class="bm-peak">—</td><td class="bm-target">Sub-6:00</td><td><div class="gap-wrap"><span style="font-size:0.8rem;color:var(--green)">▲ Strong baseline</span></div></td></tr>
+          <tr><td class="bm-name">2K Row</td><td class="bm-curr">Sub-6:30</td><td class="bm-peak">—</td><td class="bm-target">Sub-6:15</td><td><div class="gap-wrap"><span style="font-size:0.8rem;color:var(--green)">▲ Strong baseline</span></div></td></tr>
         </tbody>
       </table>
     </div>
@@ -399,11 +459,11 @@
   <div class="container">
     <div class="section-header">
       <div class="section-title">Workout Log</div>
-      <div class="section-badge">Auto-populated via Strava · Updated each session</div>
+      <div class="section-badge">Auto-populated via Garmin · Tap any row for full detail</div>
     </div>
     <div class="table-wrap">
       <table class="log-table">
-        <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Duration</th><th>Avg HR</th><th>Notes</th></tr></thead>
+        <thead><tr><th>Date</th><th>Session</th><th>Type</th><th>Duration</th><th>Distance</th><th>Avg HR</th><th>Pace</th></tr></thead>
         <tbody id="log-body">
           <tr><td colspan="6"><div class="log-empty">Plan begins Monday May 25. First session logs here after completion.</div></td></tr>
         </tbody>
@@ -504,7 +564,7 @@
   </div>
 </section>
 
-<!-- WORKOUT MODAL -->
+<!-- WORKOUT MODAL (week plan) -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
   <div class="modal" id="modal">
     <div class="modal-header">
@@ -516,6 +576,36 @@
     </div>
     <div class="modal-meta" id="modal-meta"></div>
     <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TREND CHART MODAL -->
+<div class="trend-overlay" id="trend-overlay" onclick="closeTrendModal(event)">
+  <div class="trend-box">
+    <div class="trend-head">
+      <div class="trend-title" id="trend-modal-title">Trend</div>
+      <button class="trend-close" onclick="document.getElementById('trend-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="trend-body">
+      <canvas id="trend-chart" height="200"></canvas>
+      <div class="trend-empty" id="trend-empty" style="display:none">No data yet — check back after a few weeks.</div>
+    </div>
+  </div>
+</div>
+
+<!-- WORKOUT DETAIL MODAL -->
+<div class="modal-overlay" id="wd-overlay" onclick="closeWdModal(event)">
+  <div class="modal" id="wd-modal" style="max-width:580px;">
+    <div class="modal-header">
+      <div>
+        <div class="modal-day" id="wd-date"></div>
+        <div class="modal-title" id="wd-name"></div>
+      </div>
+      <button class="modal-close" onclick="document.getElementById('wd-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="wd-stat-grid" id="wd-stats"></div>
+    <div id="wd-zones-section"></div>
+    <div id="wd-splits-section"></div>
   </div>
 </div>
 
@@ -707,10 +797,6 @@
     }
   }
 
-  document.addEventListener('keydown', e => {
-    if(e.key === 'Escape') document.getElementById('modal-overlay').classList.remove('open');
-  });
-
   function buildWeek() {
     const grid = document.getElementById('week-grid');
     const today = new Date();
@@ -782,37 +868,262 @@
   }
 
   // ── WORKOUT_LOG_DATA (auto-updated by pull_garmin_data.py) ──
-  (function(){
-    var log = [{"date": "2026-05-25", "name": "Shelby County Running", "type": "run", "duration": "45 min", "avg_hr": "147.0", "distance": "6.98 km", "notes": "Auto-logged via Garmin"}];
-    var tbody = document.getElementById('log-body');
-    if(!tbody || log.length === 0) return;
-    tbody.innerHTML = '';
-    log.forEach(function(e){
-      var tagClass = e.type || 'recovery';
-      tbody.innerHTML += '<tr>' +
-        '<td>' + e.date + '</td>' +
-        '<td style="font-weight:600;color:var(--white)">' + e.name + '</td>' +
-        '<td><span class="tag ' + tagClass + '">' + e.type + '</span></td>' +
-        '<td>' + e.duration + '</td>' +
-        '<td>' + (e.avg_hr || '—') + '</td>' +
-        '<td style="color:var(--muted)">' + e.notes + '</td>' +
-        '</tr>';
-    });
-  })();
+  var log = [{"date": "2026-05-25", "name": "Shelby County Running", "type": "run", "duration": "45 min", "avg_hr": "147.0", "distance": "6.98 km", "avg_pace": "—", "max_hr": "—", "calories": "—", "elevation_gain": "—", "hr_zones": [], "splits": [], "notes": "Auto-logged via Garmin"}];
   // ── END_WORKOUT_LOG_DATA ──
 
   // ── GARMIN_LIVE_DATA (auto-updated by pull_garmin_data.py — do not edit this block manually) ──
-  (function(){
-    var g = {"bb": 0, "sleep": null, "hrv": null, "tr": 38, "date": "2026-05-25"};
-    function setNum(id,v,good,warn){if(v===null||v===undefined)return;var el=document.getElementById(id);el.textContent=v;el.style.color=v>=good?'var(--green)':v<warn?'var(--red)':'var(--yellow)';el.style.fontSize='2rem';}
-    function setStr(id,v,goodVal,badVals){if(!v)return;var el=document.getElementById(id);el.textContent=v;el.style.color=v===goodVal?'var(--green)':badVals.indexOf(v)>-1?'var(--red)':'var(--muted)';el.style.fontSize='1.2rem';}
-    setNum('r-bb', g.bb, 60, 40);
-    setNum('r-sleep', g.sleep, 70, 60);
-    setStr('r-hrv', g.hrv, 'Balanced', ['Low','Unbalanced']);
-    setNum('r-tr', g.tr, 60, 50);
-    if(g.date){var note=document.querySelector('.r-note');if(note)note.innerHTML='<strong>Last sync: '+g.date+'</strong> · Garmin auto-syncs at 7:30 AM daily';}
-  })();
+  var g = {"bb": 0, "sleep": null, "hrv": null, "tr": 38, "vo2": null, "pred5k": null, "pred10k": null, "date": "2026-05-25"};
   // ── END_GARMIN_LIVE_DATA ──
+
+  // ── TREND_DATA (auto-updated by pull_garmin_data.py) ──
+  var trend = {"weight":[{"date":"2026-05-25","value":193}],"pred5k":[{"date":"2026-05-25","value":"23:57"}]};
+  // ── END_TREND_DATA ──
+
+  // ── APPLY GARMIN DATA ──
+  (function(){
+    function setNum(id,v,good,warn){
+      if(v===null||v===undefined)return;
+      var el=document.getElementById(id); if(!el)return;
+      el.textContent=v;
+      el.style.color=v>=good?'var(--green)':v<warn?'var(--red)':'var(--yellow)';
+      el.style.fontSize='2rem';
+    }
+    function setStr(id,v,goodVal,badVals){
+      if(!v)return;
+      var el=document.getElementById(id); if(!el)return;
+      el.textContent=v;
+      el.style.color=v===goodVal?'var(--green)':badVals.indexOf(v)>-1?'var(--red)':'var(--muted)';
+      el.style.fontSize='1.2rem';
+    }
+    function setTxt(id,v){var el=document.getElementById(id);if(el&&v)el.textContent=v;}
+
+    setNum('r-bb',   g.bb,    60, 40);
+    setNum('r-sleep',g.sleep, 70, 60);
+    setStr('r-hrv',  g.hrv,   'Balanced', ['Low','Unbalanced']);
+    setNum('r-tr',   g.tr,    60, 50);
+
+    // VO2 Max
+    if(g.vo2){
+      var vo2el = document.getElementById('r-vo2');
+      if(vo2el){ vo2el.textContent=g.vo2; vo2el.style.fontSize='2rem'; vo2el.style.color='var(--green)'; }
+      // VO2 rating
+      var rating = g.vo2>=55?'Superior':g.vo2>=51?'Excellent':g.vo2>=45?'Good':g.vo2>=39?'Fair':'Poor';
+      setTxt('r-vo2-sub','Garmin · ' + rating);
+    }
+
+    // 5K / 10K predictions
+    if(g.pred5k){
+      setTxt('r-5k',       g.pred5k);
+      setTxt('stat-5k',    g.pred5k);
+      setTxt('bm-5k',      g.pred5k);
+      setTxt('stat-5k-note','Garmin prediction · updated daily');
+      var el5=document.getElementById('r-5k'); if(el5){el5.style.color='var(--yellow)';}
+      var st5=document.getElementById('stat-5k'); if(st5){st5.style.color='var(--white)';}
+    }
+    if(g.pred10k){
+      setTxt('stat-10k',     g.pred10k);
+      setTxt('bm-10k',       g.pred10k);
+      setTxt('stat-10k-note','Garmin prediction · updated daily');
+    }
+
+    // Sync date note
+    if(g.date){
+      var noteEl = document.querySelector('.r-note');
+      if(noteEl) noteEl.innerHTML='<strong>Last sync: '+g.date+'</strong> · Garmin auto-syncs at 7:30 AM daily · Weight updated Sunday evenings';
+    }
+  })();
+
+  // ── RENDER WORKOUT LOG ──
+  (function(){
+    var tbody = document.getElementById('log-body');
+    if(!tbody || !log || log.length === 0) return;
+    tbody.innerHTML = '';
+    log.forEach(function(e, idx){
+      var tagClass = e.type || 'recovery';
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>' + e.date + '</td>' +
+        '<td style="font-weight:600;color:var(--white)">' + e.name + '</td>' +
+        '<td><span class="tag ' + tagClass + '">' + (e.type||'—') + '</span></td>' +
+        '<td>' + (e.duration||'—') + '</td>' +
+        '<td>' + (e.distance||'—') + '</td>' +
+        '<td>' + (e.avg_hr||'—') + '</td>' +
+        '<td>' + (e.avg_pace||'—') + '</td>';
+      tr.onclick = function(){ openWorkoutDetail(e); };
+      tbody.appendChild(tr);
+    });
+  })();
+
+  // ── TREND CHART MODAL ──
+  var trendChartInstance = null;
+  function openTrendChart(key) {
+    var titles = {
+      weight:  'Weight Progress (lbs)',
+      pred5k:  '5K Prediction Trend',
+      pred10k: '10K Prediction Trend'
+    };
+    var data = trend[key] || [];
+    document.getElementById('trend-modal-title').textContent = titles[key] || key;
+    var canvas = document.getElementById('trend-chart');
+    var emptyEl = document.getElementById('trend-empty');
+
+    if(!data || data.length < 2){
+      canvas.style.display = 'none';
+      emptyEl.style.display = 'block';
+      document.getElementById('trend-overlay').classList.add('open');
+      return;
+    }
+    canvas.style.display = 'block';
+    emptyEl.style.display = 'none';
+
+    // Destroy previous chart instance
+    if(trendChartInstance){ trendChartInstance.destroy(); trendChartInstance=null; }
+
+    var labels = data.map(function(d){ return d.date; });
+    var values;
+    if(key === 'weight'){
+      values = data.map(function(d){ return d.value; });
+    } else {
+      // Convert mm:ss to decimal minutes for charting
+      values = data.map(function(d){
+        if(!d.value) return null;
+        var parts = d.value.split(':');
+        return parts.length===2 ? parseInt(parts[0]) + parseInt(parts[1])/60 : null;
+      });
+    }
+
+    var goalLine = key==='weight' ? 180 : key==='pred5k' ? 21.0 : key==='pred10k' ? 42.0 : null;
+    var datasets = [{
+      label: titles[key],
+      data: values,
+      borderColor: '#f5c518',
+      backgroundColor: 'rgba(245,197,24,0.08)',
+      borderWidth: 2,
+      pointBackgroundColor: '#f5c518',
+      pointRadius: 4,
+      tension: 0.3,
+      fill: true,
+    }];
+    if(goalLine){
+      datasets.push({
+        label: 'Goal',
+        data: labels.map(function(){ return goalLine; }),
+        borderColor: '#22c55e',
+        borderDash: [4,4],
+        borderWidth: 1.5,
+        pointRadius: 0,
+        fill: false,
+      });
+    }
+
+    // Format y-axis tick for time-based charts
+    var yTickCallback = key==='weight' ? function(v){ return v+' lbs'; } : function(v){
+      var m=Math.floor(v); var s=Math.round((v-m)*60);
+      return m+':'+(s<10?'0':'')+s;
+    };
+
+    trendChartInstance = new Chart(canvas.getContext('2d'), {
+      type: 'line',
+      data: { labels: labels, datasets: datasets },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { labels: { color:'#888', font:{size:11} } },
+          tooltip: {
+            callbacks: {
+              label: function(ctx){
+                if(key==='weight') return ctx.parsed.y + ' lbs';
+                var v=ctx.parsed.y; var m=Math.floor(v); var s=Math.round((v-m)*60);
+                return m+':'+(s<10?'0':'')+s;
+              }
+            }
+          }
+        },
+        scales: {
+          x: { ticks:{color:'#666',font:{size:10}}, grid:{color:'rgba(42,42,42,0.6)'} },
+          y: {
+            ticks:{ color:'#666', font:{size:10}, callback: yTickCallback },
+            grid: { color:'rgba(42,42,42,0.6)' },
+            reverse: key !== 'weight'
+          }
+        }
+      }
+    });
+    document.getElementById('trend-overlay').classList.add('open');
+  }
+
+  function closeTrendModal(e){
+    if(e.target===document.getElementById('trend-overlay'))
+      document.getElementById('trend-overlay').classList.remove('open');
+  }
+
+  // ── WORKOUT DETAIL MODAL ──
+  function openWorkoutDetail(e) {
+    document.getElementById('wd-date').textContent = e.date;
+    document.getElementById('wd-name').textContent = e.name;
+
+    // Stat grid
+    var stats = [
+      {label:'Duration',  value: e.duration    || '—'},
+      {label:'Distance',  value: e.distance    || '—'},
+      {label:'Avg Pace',  value: e.avg_pace    || '—'},
+      {label:'Avg HR',    value: (e.avg_hr||'—') + (e.avg_hr && e.avg_hr!=='—' ? ' bpm':'')},
+      {label:'Max HR',    value: (e.max_hr||'—') + (e.max_hr && e.max_hr!=='—' ? ' bpm':'')},
+      {label:'Calories',  value: e.calories    || '—'},
+      {label:'Elevation', value: e.elevation_gain || '—'},
+      {label:'Type',      value: (e.type||'—').toUpperCase()},
+    ];
+    document.getElementById('wd-stats').innerHTML = stats.map(function(s){
+      return '<div class="wd-stat"><div class="wd-stat-label">'+s.label+'</div><div class="wd-stat-value">'+s.value+'</div></div>';
+    }).join('');
+
+    // HR Zones
+    var zonesEl = document.getElementById('wd-zones-section');
+    var zones = e.hr_zones || [];
+    if(zones.length){
+      var total = zones.reduce(function(a,z){ return a + (z.minutes||0); }, 0);
+      var zHtml = '<div class="wd-section"><div class="wd-section-title">HR Zones</div>';
+      zones.forEach(function(z, i){
+        var pct = total > 0 ? Math.round((z.minutes/total)*100) : 0;
+        zHtml += '<div class="zone-row">' +
+          '<div class="zone-lbl">'+z.zone+'</div>' +
+          '<div class="zone-bg"><div class="zone-fill z'+(i+1)+'" style="width:'+pct+'%"></div></div>' +
+          '<div class="zone-min">'+z.minutes+' min</div>' +
+          '</div>';
+      });
+      zHtml += '</div>';
+      zonesEl.innerHTML = zHtml;
+    } else { zonesEl.innerHTML = ''; }
+
+    // Splits
+    var splitsEl = document.getElementById('wd-splits-section');
+    var splits = e.splits || [];
+    if(splits.length){
+      var sHtml = '<div class="wd-section"><div class="wd-section-title">Lap Splits</div>' +
+        '<table class="splits-table"><thead><tr><th>Lap</th><th>Distance</th><th>Pace</th><th>Avg HR</th></tr></thead><tbody>';
+      splits.forEach(function(s){
+        sHtml += '<tr><td>'+s.lap+'</td><td>'+(s.dist_km||'—')+' km</td><td>'+(s.pace||'—')+'</td><td>'+(s.avg_hr||'—')+'</td></tr>';
+      });
+      sHtml += '</tbody></table></div>';
+      splitsEl.innerHTML = sHtml;
+    } else { splitsEl.innerHTML = ''; }
+
+    document.getElementById('wd-overlay').classList.add('open');
+  }
+
+  function closeWdModal(e){
+    if(e.target===document.getElementById('wd-overlay'))
+      document.getElementById('wd-overlay').classList.remove('open');
+  }
+
+  // Close all modals on Escape
+  document.addEventListener('keydown', function(e){
+    if(e.key==='Escape'){
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.getElementById('trend-overlay').classList.remove('open');
+      document.getElementById('wd-overlay').classList.remove('open');
+    }
+  });
 
   update();
   setDate();
