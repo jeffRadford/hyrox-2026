@@ -547,6 +547,21 @@
       workout: null
     },
     {
+      type:'run', label:'Zone 2 Easy Run', detail:'45 min easy conversational pace · ~140–150 bpm', duration:'60 min', location:'Outdoors',
+      workout: {
+        warmup: ['5 min walk warm-up'],
+        sections: [
+          { title:'Main Run', exercises: [
+            { name:'Easy Run', detail:'45 min — conversational pace the whole way' },
+            { name:'Heart Rate Target', detail:'140–150 bpm — if you can\'t hold a sentence, slow down' },
+            { name:'Pace', detail:'Don\'t chase a number — let HR guide you' },
+          ]},
+        ],
+        cooldown: ['10 min walk cool-down', 'Calf stretch, hamstring stretch, quad stretch — 30s each'],
+        coachNote: '<strong>This is genuinely easy.</strong> Most people run Zone 2 too hard. If it feels embarrassingly slow, that\'s correct. This session builds your aerobic engine — the foundation everything else sits on.'
+      }
+    },
+    {
       type:'strength', label:'Lower Body Strength', detail:'Goblet squat, split squat, step-ups, RDL, farmer carry', duration:'60 min', location:'Planet Fitness / Crunch',
       workout: {
         warmup: ['8 min bike', 'Leg swings × 10 each direction'],
@@ -564,21 +579,6 @@
         ],
         cooldown: ['5 min light walk', 'Hip flexor stretch 30s each side'],
         coachNote: '<strong>Spine rule:</strong> No barbell loading today or ever. If the RDLs feel off, lighten the weight — form over load every time. Track your goblet squat and split squat weights — we add 5–10% next week.'
-      }
-    },
-    {
-      type:'run', label:'Zone 2 Easy Run', detail:'45 min easy conversational pace · ~140–150 bpm', duration:'60 min', location:'Outdoors',
-      workout: {
-        warmup: ['5 min walk warm-up'],
-        sections: [
-          { title:'Main Run', exercises: [
-            { name:'Easy Run', detail:'45 min — conversational pace the whole way' },
-            { name:'Heart Rate Target', detail:'140–150 bpm — if you can\'t hold a sentence, slow down' },
-            { name:'Pace', detail:'Don\'t chase a number — let HR guide you' },
-          ]},
-        ],
-        cooldown: ['10 min walk cool-down', 'Calf stretch, hamstring stretch, quad stretch — 30s each'],
-        coachNote: '<strong>This is genuinely easy.</strong> Most people run Zone 2 too hard. If it feels embarrassingly slow, that\'s correct. This session builds your aerobic engine — the foundation everything else sits on.'
       }
     },
     {
@@ -780,6 +780,26 @@
       ${nextPlan ? `<div><div class="workout-meta-label">Next Session</div><div class="workout-meta-value">${fullDayNames[nextDow]} — ${nextPlan.label}</div></div>` : ''}
     `;
   }
+
+  // ── WORKOUT_LOG_DATA (auto-updated by pull_garmin_data.py) ──
+  (function(){
+    var log = [];
+    var tbody = document.getElementById('log-body');
+    if(!tbody || log.length === 0) return;
+    tbody.innerHTML = '';
+    log.forEach(function(e){
+      var tagClass = e.type || 'recovery';
+      tbody.innerHTML += '<tr>' +
+        '<td>' + e.date + '</td>' +
+        '<td style="font-weight:600;color:var(--white)">' + e.name + '</td>' +
+        '<td><span class="tag ' + tagClass + '">' + e.type + '</span></td>' +
+        '<td>' + e.duration + '</td>' +
+        '<td>' + (e.avg_hr || '—') + '</td>' +
+        '<td style="color:var(--muted)">' + e.notes + '</td>' +
+        '</tr>';
+    });
+  })();
+  // ── END_WORKOUT_LOG_DATA ──
 
   // ── GARMIN_LIVE_DATA (auto-updated by pull_garmin_data.py — do not edit this block manually) ──
   (function(){
