@@ -629,13 +629,9 @@
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', opts);
   }
 
-  // ── WEEK 1 PLAN (Sun May 24 – Sat May 30) ──
-  // Index 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+  // ── WEEK 1 PLAN (Mon May 25 – Sun May 31) ──
+  // Index 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
   const weekPlan = [
-    {
-      type:'rest', label:'Rest Day', detail:'Full recovery — plan kicks off tomorrow', duration:'—', location:'—',
-      workout: null
-    },
     {
       type:'run', label:'Zone 2 Easy Run', detail:'45 min easy conversational pace · ~140–150 bpm', duration:'60 min', location:'Outdoors',
       workout: {
@@ -750,11 +746,17 @@
         coachNote: '<strong>This is your longest run of Week 1.</strong> It should feel easy the whole way. If you\'re working hard at any point, slow down. These long easy runs are where your aerobic base is built — they pay dividends in December.'
       }
     },
+    {
+      type:'rest', label:'Rest Day', detail:'Full rest — you\'ve earned it after a strong first week', duration:'—', location:'—',
+      workout: null
+    },
   ];
 
   const typeLabels = { run:'Run', strength:'Strength', interval:'Hyrox', recovery:'Recovery', rest:'Rest', hyrox:'Hyrox Sim', pending:'TBD' };
-  const dayNames   = ['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  const fullDayNames = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayNames   = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
+  const fullDayNames = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'];
+  // Convert JS getDay() (0=Sun…6=Sat) to Mon-based index (0=Mon…6=Sun)
+  function monDow(d) { return (d.getDay() + 6) % 7; }
 
   // ── MODAL ──
   function openModal(i, dateNum) {
@@ -800,7 +802,7 @@
   function buildWeek() {
     const grid = document.getElementById('week-grid');
     const today = new Date();
-    const dow = today.getDay();
+    const dow = monDow(today); // 0=Mon … 6=Sun
     grid.innerHTML = '';
     for(let i=0; i<7; i++) {
       const d = new Date(today);
@@ -827,7 +829,7 @@
   }
 
   function setTodayWorkout() {
-    const dow = new Date().getDay();
+    const dow = monDow(new Date()); // 0=Mon … 6=Sun
     const p = weekPlan[dow] || { type:'rest', label:'Rest Day', detail:'', duration:'—', location:'—', workout:null };
     const card = document.getElementById('today-card');
     const bgMap = { rest:'REST', strength:'LIFT', run:'RUN', interval:'HYROX', recovery:'REST', hyrox:'RACE SIM', pending:'TBD' };
