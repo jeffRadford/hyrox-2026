@@ -874,7 +874,7 @@
   // ── END_WORKOUT_LOG_DATA ──
 
   // ── GARMIN_LIVE_DATA (auto-updated by pull_garmin_data.py — do not edit this block manually) ──
-  var g = {"bb": 53, "sleep": 90, "hrv": "NONE", "tr": 81, "vo2": null, "pred5k": "24:31", "pred10k": "53:53", "date": "2026-06-01"};
+  var g = {"bb": 53, "sleep": 90, "hrv": "Onboarding", "tr": 81, "vo2": 48.4, "pred5k": "24:31", "pred10k": "53:53", "date": "2026-06-01"};
   // ── END_GARMIN_LIVE_DATA ──
 
   // ── TREND_DATA (auto-updated by pull_garmin_data.py) ──
@@ -902,6 +902,11 @@
     setNum('r-bb',   g.bb,    60, 40);
     setNum('r-sleep',g.sleep, 70, 60);
     setStr('r-hrv',  g.hrv,   'Balanced', ['Low','Unbalanced']);
+    // Update HRV sub-label if still onboarding
+    if(g.hrv === 'Onboarding'){
+      var hrvSub = document.querySelector('#r-hrv + .r-sub') || (document.getElementById('r-hrv') && document.getElementById('r-hrv').nextElementSibling);
+      if(hrvSub) hrvSub.textContent = '~3 weeks to baseline';
+    }
     setNum('r-tr',   g.tr,    60, 50);
 
     // VO2 Max
