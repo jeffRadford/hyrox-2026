@@ -323,7 +323,9 @@
   <div class="container">
     <div class="section-header">
       <div class="section-title">This Week</div>
-      <div class="section-badge">Week 2 of 27 · Base Building · Jun 1–7</div>
+      <!-- WEEK_META_DATA (auto-updated by pull_garmin_data.py) -->
+      <div class="section-badge" id="week-badge">Week 2 of 27 · Base Building · Jun 1–7</div>
+      <!-- END_WEEK_META_DATA -->
     </div>
     <div class="week-grid" id="week-grid"></div>
     <div class="week-note">Updated each Monday. Your coach adjusts sessions mid-week based on your Garmin readiness check-in.</div>
@@ -629,133 +631,9 @@
     document.getElementById('today-date').textContent = new Date().toLocaleDateString('en-US', opts);
   }
 
-  // ── WEEK 2 PLAN (Mon Jun 1 – Sun Jun 7) ──
-  // Index 0=Mon, 1=Tue, 2=Wed, 3=Thu, 4=Fri, 5=Sat, 6=Sun
-  const weekPlan = [
-    {
-      type:'strength', label:'Lower Body Strength', detail:'Week 2 — add 5–10% load + lateral band walks', duration:'60 min', location:'Planet Fitness / Crunch',
-      workout: {
-        warmup: ['8 min bike', 'Leg swings × 10 each direction', 'Lateral band walks × 15 each side (warm-up weight)'],
-        sections: [
-          { title:'Main Work — add 5–10% load vs Week 1', exercises: [
-            { name:'Goblet Squat', detail:'4 × 12 — bump weight where Week 1 felt easy' },
-            { name:'Bulgarian Split Squat (DB)', detail:'3 × 10 each leg — add 5 lbs if reps felt controlled' },
-            { name:'DB Romanian Deadlift', detail:'3 × 12 — hip hinge, spine neutral, slight load increase' },
-            { name:'Step-Ups onto Box', detail:'3 × 12 each leg — drive through heel' },
-            { name:'Single-Leg Hip Thrust', detail:'3 × 15 each — full contraction at top' },
-          ]},
-          { title:'Hip Stability Finisher', exercises: [
-            { name:'Lateral Band Walks', detail:'3 × 15 each direction — band above knees, stay low' },
-            { name:'Farmer Carry', detail:'3 × 30m — same or heavier than Week 1' },
-          ]},
-        ],
-        cooldown: ['5 min light walk', 'Hip flexor stretch 30s each side'],
-        coachNote: '<strong>Load check:</strong> If you logged your Week 1 weights, add 5–10% where it felt easy and 0% where it was a grind. The lateral band walks are new — they build the hip stability you need for sled pushes and lunges later. Don\'t rush them.'
-      }
-    },
-    {
-      type:'run', label:'Tempo Intro', detail:'4 × 5 min Zone 3 · ~155–165 bpm · 90s rest', duration:'60 min', location:'Outdoors',
-      workout: {
-        warmup: ['10 min easy jog — conversational pace, fully loose before hitting tempo'],
-        sections: [
-          { title:'Main Set', exercises: [
-            { name:'4 × 5 min at Zone 3', detail:'~155–165 bpm — comfortably hard, can say a few words but not a full sentence' },
-            { name:'Rest Interval', detail:'90s easy jog between each rep — keep moving, don\'t stop' },
-            { name:'Effort Feel', detail:'7/10 — controlled, not a sprint. You should finish each rep feeling like you had 1–2 min more in you.' },
-          ]},
-        ],
-        cooldown: ['10 min easy jog/walk cool-down', 'Calf, hamstring, quad stretch — 30s each'],
-        coachNote: '<strong>First tempo session of the plan.</strong> The goal is to introduce sustained Zone 3 effort — not to race. HR might spike on rep 1; that\'s fine. By rep 3–4 you should have a sense of the pace. Note your average pace per rep — we\'ll use these numbers to track your running development.'
-      }
-    },
-    {
-      type:'strength', label:'Upper Body + Core', detail:'Pull-ups, row, press + face pull + ring row added', duration:'60 min', location:'Planet Fitness / Crunch',
-      workout: {
-        warmup: ['8 min easy row', 'Arm circles × 10 forward/back', 'Band pull-apart × 15'],
-        sections: [
-          { title:'Main Work', exercises: [
-            { name:'Pull-Ups', detail:'4 × max reps — same as Week 1, strict form, full dead hang' },
-            { name:'DB Bent-Over Row', detail:'3 × 12 each arm' },
-            { name:'Push-Ups', detail:'3 × 15–20 — elevate feet if this is easy' },
-            { name:'DB Shoulder Press', detail:'3 × 12' },
-          ]},
-          { title:'Week 2 Additions', exercises: [
-            { name:'Face Pull (cable or band)', detail:'3 × 15 — elbows high, pull to forehead, retract scapula' },
-            { name:'TRX / Ring Row (or inverted row)', detail:'3 × 12 — body straight, pull chest to hands' },
-          ]},
-          { title:'Core Circuit — 3 Rounds', exercises: [
-            { name:'Dead Bug', detail:'× 10 reps — lower back stays flat, controlled breath' },
-            { name:'Pallof Press', detail:'× 12 each side — resist rotation, brace hard' },
-            { name:'Side Plank', detail:'× 30s each side' },
-          ]},
-        ],
-        cooldown: ['5 min stretch — lats, chest, shoulders'],
-        coachNote: '<strong>Face pulls are important.</strong> They protect your shoulders for all the overhead and pulling you\'ll do in Phase 3. Don\'t skip them to save time. If your gym doesn\'t have cables, a resistance band anchored at head height works perfectly.'
-      }
-    },
-    {
-      type:'recovery', label:'Active Recovery', detail:'Easy walk + mobility + foam roll', duration:'30 min', location:'Home / Outdoors',
-      workout: {
-        warmup: [],
-        sections: [
-          { title:'Movement', exercises: [
-            { name:'Easy Walk or Light Bike', detail:'20–30 min — HR under 120, genuinely easy' },
-          ]},
-          { title:'Mobility (10 min)', exercises: [
-            { name:'Hip Flexor Stretch', detail:'60s each side — lunge position, reach up' },
-            { name:'Thoracic Rotation', detail:'10 reps each side — thread the needle' },
-            { name:'90/90 Hip Stretch', detail:'60s each side' },
-          ]},
-          { title:'Foam Roll', exercises: [
-            { name:'Quads', detail:'60s each leg' },
-            { name:'Hamstrings', detail:'60s each leg' },
-            { name:'Upper Back / Thoracic', detail:'60s — pause on tight spots' },
-          ]},
-        ],
-        cooldown: [],
-        coachNote: '<strong>Don\'t skip this.</strong> You have a hard Friday session tomorrow. Today\'s job is to arrive at it fresh. If Body Battery is below 35, take a full rest day instead.'
-      }
-    },
-    {
-      type:'interval', label:'Hyrox Conditioning', detail:'Row 3×500m, med ball slams, burpee broad jumps, farmer carry', duration:'60 min', location:'Orangetheory or Crunch',
-      workout: {
-        warmup: ['5 min easy row — settle the breathing, relax the shoulders'],
-        sections: [
-          { title:'Rowing — Step Up from Week 1', exercises: [
-            { name:'3 × 500m Row', detail:'Race effort — note your split time per 500m · 2 min rest between' },
-            { name:'Target', detail:'Sub-2:00/500m split — this is building toward your race 1000m row station' },
-          ]},
-          { title:'Conditioning Circuit', exercises: [
-            { name:'Med Ball Slams', detail:'3 × 15 — explosive, full extension overhead, slam hard' },
-            { name:'Burpee Broad Jumps', detail:'4 × 15m — building on Week 1, focus on explosive push-off' },
-            { name:'DB Farmer Carry (Sandbag Sim)', detail:'3 × 40m — heavier than Week 1, upright posture' },
-            { name:'Jump Rope', detail:'2 × 3 min — steady rhythm' },
-          ]},
-        ],
-        cooldown: ['5 min easy walk', 'Hip flexors, shoulders — 2 min each'],
-        coachNote: '<strong>Log your 500m row splits.</strong> That\'s your most important data point today. The race station is 1000m — your sub-1:20 goal needs you at sub-4:00/1000m by December. Note where you are now and we\'ll track it weekly.'
-      }
-    },
-    {
-      type:'run', label:'Long Easy Run', detail:'60 min Zone 2 — longer than Week 1', duration:'60 min', location:'Outdoors',
-      workout: {
-        warmup: ['5 min walk'],
-        sections: [
-          { title:'Main Run', exercises: [
-            { name:'Long Easy Run', detail:'60 min — Zone 2 throughout, HR 140–150 bpm ceiling' },
-            { name:'Pace', detail:'Slower than Tuesday\'s tempo. If you ran ~10:30/mile Tuesday, this is 11:00–11:30/mile.' },
-            { name:'Mindset', detail:'Time on feet. Every minute at Zone 2 builds the engine.' },
-          ]},
-        ],
-        cooldown: ['5 min walk', 'Full leg stretch — 5 min'],
-        coachNote: '<strong>One more minute than last week.</strong> That\'s the progression — small, consistent additions. Zone 2 isn\'t glamorous but it\'s where your aerobic base is built. This run matters more than it feels like it does.'
-      }
-    },
-    {
-      type:'rest', label:'Rest Day', detail:'Full rest — well earned after a solid Week 2', duration:'—', location:'—',
-      workout: null
-    },
-  ];
+  // ── WEEK_PLAN_DATA (auto-updated by pull_garmin_data.py — do not edit manually)
+  const weekPlan = [{"type": "strength", "label": "Lower Body Strength", "detail": "Week 2 — add 5–10% load + lateral band walks", "duration": "60 min", "location": "Planet Fitness / Crunch", "workout": {"warmup": ["8 min bike", "Leg swings × 10 each direction", "Lateral band walks × 15 each side (warm-up weight)"], "sections": [{"title": "Main Work — add 5–10% load vs Week 1", "exercises": [{"name": "Goblet Squat", "detail": "4 × 12 — bump weight where Week 1 felt easy"}, {"name": "Bulgarian Split Squat (DB)", "detail": "3 × 10 each leg — add 5 lbs if reps felt controlled"}, {"name": "DB Romanian Deadlift", "detail": "3 × 12 — slight load increase, spine neutral"}, {"name": "Step-Ups onto Box", "detail": "3 × 12 each leg — drive through heel"}, {"name": "Single-Leg Hip Thrust", "detail": "3 × 15 each — full contraction at top"}]}, {"title": "Hip Stability Finisher", "exercises": [{"name": "Lateral Band Walks", "detail": "3 × 15 each direction — band above knees, stay low"}, {"name": "Farmer Carry", "detail": "3 × 30m — same or heavier than Week 1"}]}], "cooldown": ["5 min light walk", "Hip flexor stretch 30s each side"], "coachNote": "<strong>Load check:</strong> If you logged your Week 1 weights, add 5–10% where it felt easy and 0% where it was a grind. The lateral band walks are new — they build the hip stability you need for sled pushes and lunges later."}}, {"type": "run", "label": "Tempo Intro", "detail": "4 × 5 min Zone 3 · ~155–165 bpm · 90s rest", "duration": "60 min", "location": "Outdoors", "workout": {"warmup": ["10 min easy jog — conversational pace, fully loose before hitting tempo"], "sections": [{"title": "Main Set", "exercises": [{"name": "4 × 5 min at Zone 3", "detail": "~155–165 bpm — comfortably hard, can say a few words but not a full sentence"}, {"name": "Rest Interval", "detail": "90s easy jog between each rep — keep moving, don't stop"}, {"name": "Effort Feel", "detail": "7/10 — controlled, not a sprint. You should finish each rep feeling like you had 1–2 min more in you."}]}], "cooldown": ["10 min easy jog/walk cool-down", "Calf, hamstring, quad stretch — 30s each"], "coachNote": "<strong>First tempo session of the plan.</strong> The goal is to introduce sustained Zone 3 effort — not to race. Note your average pace per rep — we'll use these numbers to track your running development."}}, {"type": "strength", "label": "Upper Body + Core", "detail": "Pull-ups, row, press + face pull + ring row added", "duration": "60 min", "location": "Planet Fitness / Crunch", "workout": {"warmup": ["8 min easy row", "Arm circles × 10 forward/back", "Band pull-apart × 15"], "sections": [{"title": "Main Work", "exercises": [{"name": "Pull-Ups", "detail": "4 × max reps — strict form, full dead hang"}, {"name": "DB Bent-Over Row", "detail": "3 × 12 each arm"}, {"name": "Push-Ups", "detail": "3 × 15–20 — elevate feet if easy"}, {"name": "DB Shoulder Press", "detail": "3 × 12"}]}, {"title": "Week 2 Additions", "exercises": [{"name": "Face Pull (cable or band)", "detail": "3 × 15 — elbows high, pull to forehead, retract scapula"}, {"name": "TRX / Ring Row (or inverted row)", "detail": "3 × 12 — body straight, pull chest to hands"}]}, {"title": "Core Circuit — 3 Rounds", "exercises": [{"name": "Dead Bug", "detail": "× 10 reps — lower back stays flat"}, {"name": "Pallof Press", "detail": "× 12 each side — resist rotation"}, {"name": "Side Plank", "detail": "× 30s each side"}]}], "cooldown": ["5 min stretch — lats, chest, shoulders"], "coachNote": "<strong>Face pulls are important.</strong> They protect your shoulders for all the overhead and pulling in Phase 3. If no cables, use a resistance band anchored at head height."}}, {"type": "recovery", "label": "Active Recovery", "detail": "Easy walk + mobility + foam roll", "duration": "30 min", "location": "Home / Outdoors", "workout": {"warmup": [], "sections": [{"title": "Movement", "exercises": [{"name": "Easy Walk or Light Bike", "detail": "20–30 min — HR under 120"}]}, {"title": "Mobility (10 min)", "exercises": [{"name": "Hip Flexor Stretch", "detail": "60s each side"}, {"name": "Thoracic Rotation", "detail": "10 reps each side — thread the needle"}, {"name": "90/90 Hip Stretch", "detail": "60s each side"}]}, {"title": "Foam Roll", "exercises": [{"name": "Quads", "detail": "60s each leg"}, {"name": "Hamstrings", "detail": "60s each leg"}, {"name": "Upper Back / Thoracic", "detail": "60s — pause on tight spots"}]}], "cooldown": [], "coachNote": "<strong>Hard Friday session tomorrow.</strong> Today's job is to arrive fresh. If Body Battery is below 35, take full rest instead."}}, {"type": "interval", "label": "Hyrox Conditioning", "detail": "Row 3×500m, med ball slams, burpee broad jumps, farmer carry", "duration": "60 min", "location": "Orangetheory or Crunch", "workout": {"warmup": ["5 min easy row — settle the breathing, relax the shoulders"], "sections": [{"title": "Rowing — Step Up from Week 1", "exercises": [{"name": "3 × 500m Row", "detail": "Race effort — note your split time per 500m · 2 min rest between"}, {"name": "Target", "detail": "Sub-2:00/500m split — building toward your race 1000m row station"}]}, {"title": "Conditioning Circuit", "exercises": [{"name": "Med Ball Slams", "detail": "3 × 15 — explosive, full extension overhead"}, {"name": "Burpee Broad Jumps", "detail": "4 × 15m — explosive push-off, building on Week 1"}, {"name": "DB Farmer Carry (Sandbag Sim)", "detail": "3 × 40m — heavier than Week 1, upright posture"}, {"name": "Jump Rope", "detail": "2 × 3 min — steady rhythm"}]}], "cooldown": ["5 min easy walk", "Hip flexors, shoulders — 2 min each"], "coachNote": "<strong>Log your 500m row splits.</strong> The race station is 1000m — your sub-1:20 goal needs sub-4:00/1000m by December. Note where you are now and we'll track it weekly."}}, {"type": "run", "label": "Long Easy Run", "detail": "60 min Zone 2 — longer than Week 1", "duration": "60 min", "location": "Outdoors", "workout": {"warmup": ["5 min walk"], "sections": [{"title": "Main Run", "exercises": [{"name": "Long Easy Run", "detail": "60 min — Zone 2 throughout, HR 140–150 bpm ceiling"}, {"name": "Pace", "detail": "Slower than Tuesday's tempo — time on feet, not pace"}, {"name": "Mindset", "detail": "Every minute at Zone 2 builds the engine."}]}], "cooldown": ["5 min walk", "Full leg stretch — 5 min"], "coachNote": "<strong>One more minute than last week.</strong> Small, consistent additions. Zone 2 isn't glamorous but it's where your aerobic base is built."}}, {"type": "rest", "label": "Rest Day", "detail": "Full rest — well earned after a solid Week 2", "duration": "—", "location": "—", "workout": null}];
+  // ── END_WEEK_PLAN_DATA
 
   const typeLabels = { run:'Run', strength:'Strength', interval:'Hyrox', recovery:'Recovery', rest:'Rest', hyrox:'Hyrox Sim', pending:'TBD' };
   const dayNames   = ['MON','TUE','WED','THU','FRI','SAT','SUN'];
@@ -875,11 +753,11 @@
   }
 
   // ── WORKOUT_LOG_DATA (auto-updated by pull_garmin_data.py) ──
-  var log = [{"date": "2026-06-01", "name": "Shelby County Running", "type": "run", "duration": "28 min", "avg_hr": "141.0", "max_hr": "157.0", "distance": "4.84 km", "avg_pace": "5:45/km", "calories": "355.0", "elevation_gain": "15m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.6}, {"zone": "Zone 2", "minutes": 6.8}, {"zone": "Zone 3", "minutes": 19.0}, {"zone": "Zone 4", "minutes": 0.9}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "5:38/km", "avg_hr": 130.0}, {"lap": 2, "dist_km": 1.61, "pace": "5:36/km", "avg_hr": 148.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:02/km", "avg_hr": 147.0}, {"lap": 4, "dist_km": 0.01, "pace": "5:39/km", "avg_hr": 156.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-30", "name": "Shelby County Running", "type": "run", "duration": "48 min", "avg_hr": "148.0", "max_hr": "164.0", "distance": "7.71 km", "avg_pace": "6:14/km", "calories": "608.0", "elevation_gain": "34m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.3}, {"zone": "Zone 2", "minutes": 4.0}, {"zone": "Zone 3", "minutes": 29.0}, {"zone": "Zone 4", "minutes": 14.4}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "6:13/km", "avg_hr": 132.0}, {"lap": 2, "dist_km": 1.61, "pace": "5:59/km", "avg_hr": 146.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:07/km", "avg_hr": 151.0}, {"lap": 4, "dist_km": 1.61, "pace": "6:21/km", "avg_hr": 155.0}, {"lap": 5, "dist_km": 1.27, "pace": "6:38/km", "avg_hr": 159.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-29", "name": "HIIT", "type": "interval", "duration": "101 min", "avg_hr": "109.0", "max_hr": "199.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "651.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 13.8}, {"zone": "Zone 2", "minutes": 14.1}, {"zone": "Zone 3", "minutes": 25.9}, {"zone": "Zone 4", "minutes": 3.8}, {"zone": "Zone 5", "minutes": 0.7}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 109.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-27", "name": "Strength", "type": "strength", "duration": "52 min", "avg_hr": "80.0", "max_hr": "147.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "160.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 4.4}, {"zone": "Zone 2", "minutes": 1.4}, {"zone": "Zone 3", "minutes": 0.7}, {"zone": "Zone 4", "minutes": 0.0}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 80.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-26", "name": "Strength", "type": "strength", "duration": "66 min", "avg_hr": "83.0", "max_hr": "131.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "222.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 11.7}, {"zone": "Zone 2", "minutes": 1.9}, {"zone": "Zone 3", "minutes": 0.0}, {"zone": "Zone 4", "minutes": 0.0}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 83.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-25", "name": "Shelby County Running", "type": "run", "duration": "45 min", "avg_hr": "147.0", "max_hr": "165.0", "distance": "6.98 km", "avg_pace": "6:26/km", "calories": "561.0", "elevation_gain": "40m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.4}, {"zone": "Zone 2", "minutes": 4.1}, {"zone": "Zone 3", "minutes": 27.9}, {"zone": "Zone 4", "minutes": 12.2}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "6:01/km", "avg_hr": 132.0}, {"lap": 2, "dist_km": 1.61, "pace": "6:08/km", "avg_hr": 144.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:28/km", "avg_hr": 150.0}, {"lap": 4, "dist_km": 1.61, "pace": "6:50/km", "avg_hr": 155.0}, {"lap": 5, "dist_km": 0.54, "pace": "7:23/km", "avg_hr": 157.0}], "notes": "Auto-logged via Garmin"}];
+  var log = [{"date": "2026-06-02", "name": "Strength", "type": "strength", "duration": "42 min", "avg_hr": "74.0", "max_hr": "110.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "105.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 0.8}, {"zone": "Zone 2", "minutes": 0.0}, {"zone": "Zone 3", "minutes": 0.0}, {"zone": "Zone 4", "minutes": 0.0}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 74.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-06-01", "name": "Shelby County Running", "type": "run", "duration": "28 min", "avg_hr": "141.0", "max_hr": "157.0", "distance": "4.84 km", "avg_pace": "5:45/km", "calories": "355.0", "elevation_gain": "15m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.6}, {"zone": "Zone 2", "minutes": 6.8}, {"zone": "Zone 3", "minutes": 19.0}, {"zone": "Zone 4", "minutes": 0.9}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "5:38/km", "avg_hr": 130.0}, {"lap": 2, "dist_km": 1.61, "pace": "5:36/km", "avg_hr": 148.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:02/km", "avg_hr": 147.0}, {"lap": 4, "dist_km": 0.01, "pace": "5:39/km", "avg_hr": 156.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-30", "name": "Shelby County Running", "type": "run", "duration": "48 min", "avg_hr": "148.0", "max_hr": "164.0", "distance": "7.71 km", "avg_pace": "6:14/km", "calories": "608.0", "elevation_gain": "34m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.3}, {"zone": "Zone 2", "minutes": 4.0}, {"zone": "Zone 3", "minutes": 29.0}, {"zone": "Zone 4", "minutes": 14.4}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "6:13/km", "avg_hr": 132.0}, {"lap": 2, "dist_km": 1.61, "pace": "5:59/km", "avg_hr": 146.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:07/km", "avg_hr": 151.0}, {"lap": 4, "dist_km": 1.61, "pace": "6:21/km", "avg_hr": 155.0}, {"lap": 5, "dist_km": 1.27, "pace": "6:38/km", "avg_hr": 159.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-29", "name": "HIIT", "type": "interval", "duration": "101 min", "avg_hr": "109.0", "max_hr": "199.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "651.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 13.8}, {"zone": "Zone 2", "minutes": 14.1}, {"zone": "Zone 3", "minutes": 25.9}, {"zone": "Zone 4", "minutes": 3.8}, {"zone": "Zone 5", "minutes": 0.7}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 109.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-27", "name": "Strength", "type": "strength", "duration": "52 min", "avg_hr": "80.0", "max_hr": "147.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "160.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 4.4}, {"zone": "Zone 2", "minutes": 1.4}, {"zone": "Zone 3", "minutes": 0.7}, {"zone": "Zone 4", "minutes": 0.0}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 80.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-26", "name": "Strength", "type": "strength", "duration": "66 min", "avg_hr": "83.0", "max_hr": "131.0", "distance": "\u2014", "avg_pace": "\u2014", "calories": "222.0", "elevation_gain": "\u2014", "hr_zones": [{"zone": "Zone 1", "minutes": 11.7}, {"zone": "Zone 2", "minutes": 1.9}, {"zone": "Zone 3", "minutes": 0.0}, {"zone": "Zone 4", "minutes": 0.0}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 0.0, "pace": "\u2014", "avg_hr": 83.0}], "notes": "Auto-logged via Garmin"}, {"date": "2026-05-25", "name": "Shelby County Running", "type": "run", "duration": "45 min", "avg_hr": "147.0", "max_hr": "165.0", "distance": "6.98 km", "avg_pace": "6:26/km", "calories": "561.0", "elevation_gain": "40m", "hr_zones": [{"zone": "Zone 1", "minutes": 0.4}, {"zone": "Zone 2", "minutes": 4.1}, {"zone": "Zone 3", "minutes": 27.9}, {"zone": "Zone 4", "minutes": 12.2}, {"zone": "Zone 5", "minutes": 0.0}], "splits": [{"lap": 1, "dist_km": 1.61, "pace": "6:01/km", "avg_hr": 132.0}, {"lap": 2, "dist_km": 1.61, "pace": "6:08/km", "avg_hr": 144.0}, {"lap": 3, "dist_km": 1.61, "pace": "6:28/km", "avg_hr": 150.0}, {"lap": 4, "dist_km": 1.61, "pace": "6:50/km", "avg_hr": 155.0}, {"lap": 5, "dist_km": 0.54, "pace": "7:23/km", "avg_hr": 157.0}], "notes": "Auto-logged via Garmin"}];
   // ── END_WORKOUT_LOG_DATA ──
 
   // ── GARMIN_LIVE_DATA (auto-updated by pull_garmin_data.py — do not edit this block manually) ──
-  var g = {"bb": 79, "sleep": 85, "hrv": "Onboarding", "tr": 81, "vo2": 49.6, "pred5k": "24:18", "pred10k": "53:20", "date": "2026-06-02"};
+  var g = {"bb": 79, "sleep": 85, "hrv": "Onboarding", "tr": 84, "vo2": 49.6, "pred5k": "24:18", "pred10k": "53:20", "date": "2026-06-02"};
   // ── END_GARMIN_LIVE_DATA ──
 
   // ── TREND_DATA (auto-updated by pull_garmin_data.py) ──
