@@ -138,7 +138,7 @@
 
   /* WORKOUT LOG */
   .log-table { width:100%; border-collapse:collapse; }
-  .log-table th { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0.5rem 0.9rem; text-align:left; border-bottom:1px solid var(--border); }
+  .log-table th { font-size:0.64rem; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); padding:0.5rem 0.9rem; text-align:left; border-bottom:1px solid var(--border); position:sticky; top:0; background:var(--card); z-index:2; }
   .log-table td { padding:0.9rem 0.9rem; font-size:0.85rem; border-bottom:1px solid rgba(42,42,42,0.5); color:rgba(240,240,240,0.7); vertical-align:middle; }
   .log-table tr:last-child td { border-bottom:none; }
   .log-empty { text-align:center; padding:2.5rem 1rem; color:var(--muted); font-size:0.82rem; }
@@ -189,7 +189,7 @@
   .note-text { font-size:0.82rem; color:rgba(240,240,240,0.7); line-height:1.6; }
 
   /* TABLE WRAP */
-  .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:4px; overflow:hidden; }
+  .table-wrap { background:var(--card); border:1px solid var(--border); border-radius:4px; overflow-y:auto; max-height:480px; }
 
   /* MODAL */
   .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); z-index:500; align-items:center; justify-content:center; padding:1rem; }
@@ -847,7 +847,11 @@
     var tbody = document.getElementById('log-body');
     if(!tbody || !log || log.length === 0) return;
     tbody.innerHTML = '';
-    log.forEach(function(e){
+    // Newest workouts first
+    var sortedLog = log.slice().sort(function(a, b){
+      return String(b.date).localeCompare(String(a.date));
+    });
+    sortedLog.forEach(function(e){
       var tagClass = e.type || 'recovery';
       var tr = document.createElement('tr');
       tr.innerHTML =
